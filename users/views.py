@@ -7,6 +7,7 @@ from .forms import MyRegisterForm
 
 def register(request):
     """Register a new user."""
+    raise Exception("QWERTY")
     if request.method != 'POST':
         # Показати порожню форму регістрації
         form = MyRegisterForm()
