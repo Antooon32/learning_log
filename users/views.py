@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from .forms import MyRegisterForm
 
 # Create your views here.
 
@@ -8,10 +9,10 @@ def register(request):
     """Register a new user."""
     if request.method != 'POST':
         # Показати порожню форму регістрації
-        form = UserCreationForm()
+        form = MyRegisterForm()
     else:
         # Опрацювати заповнену форму.
-        form = UserCreationForm(data=request.POST)
+        form = MyRegisterForm(data=request.POST)
 
         if form.is_valid():
             new_user = form.save()
