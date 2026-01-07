@@ -1,3 +1,4 @@
+{% load static %}
 {% load bootstrap4 %}
 
 <!DOCTYPE html>
@@ -63,5 +64,7 @@
             {% block container %}{% endblock container %}
         </div>
     </main>
+
+    <script src="{% static 'js/textarea_resizer.js' %}"></script>
 </body>
 </html>
