@@ -1,11 +1,5 @@
-document.addEventListener('input', function (event) {
-    if (event.target.classList.contains('auto-expand')) {
-        autoExpand(event.target);
-    }
-}, false);
-
 function autoExpand(field) {
-    field.style.height = 'inherit';
+    field.style.setProperty('height', 'auto', 'important');
 
     const computed = window.getComputedStyle(field);
 
@@ -13,16 +7,22 @@ function autoExpand(field) {
     const maxRows = 20;
     const maxHeight = lineHeight * maxRows;
 
-    const contentHeight = field.scrollHeight;
+    let newHeight = field.scrollHeight;
 
-    if (contentHeight <= maxHeight) {
-        field.style.height = contentHeight + 'px';
+    if (newHeight <= maxHeight) {
+        field.style.setProperty('height', newHeight + 'px', 'important');
         field.style.overflowY = 'hidden';
     } else {
-        field.style.height = maxHeight + 'px';
+        field.style.setProperty('height', maxHeight + 'px', 'important');
         field.style.overflowY = 'scroll';
     }
 }
+
+document.addEventListener('input', function (event) {
+    if (event.target.classList.contains('auto-expand')) {
+        autoExpand(event.target);
+    }
+}, false);
 
 window.addEventListener('load', () => {
     document.querySelectorAll('.auto-expand').forEach(autoExpand);
