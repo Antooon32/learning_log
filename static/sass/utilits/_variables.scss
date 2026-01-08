@@ -1,0 +1,21 @@
+@use "sass:string";
+
+
+
+// @function get-var($variable-name) {
+//   $parts: string.split($variable-name, '__');
+//   $prefix: nth($parts, 1);
+//   $key: nth($parts, 2);
+
+//   @if not map-has-key($var-maps, $prefix) {
+//     @error "Невідомий префікс '#{$prefix}' для змінної '#{$variable-name}'. Допустимі префікси: #{map-keys($var-maps)}.";
+//   }
+
+//   $target-map: map-get($var-maps, $prefix);
+
+//   @if not map-has-key($target-map, $key) {
+//     @error "Ключ '#{$key}' не знайдено в мапі '#{$prefix}'.";
+//   }
+
+//   @return map-get($target-map, $key);
+// }

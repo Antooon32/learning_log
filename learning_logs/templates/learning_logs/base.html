@@ -11,6 +11,10 @@
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
 
+    {% load compress %} {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'sass/main.scss' %}">
+    {% endcompress %}
+
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
