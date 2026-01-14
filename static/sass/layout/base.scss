@@ -1,0 +1,111 @@
+.header {
+    background-color: get-var(main__second);
+    // height: 100px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+
+    // .container {
+    //     display: flex;
+    //     align-items: center;
+    // }
+
+    .nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .nav-list {
+            @media screen and (min-width: getBreakPoint(tablet)) {
+                display: flex;
+                gap: 18px;
+                align-items: center;
+            }
+
+            &__item:nth-child(2) {
+                display: none;
+
+                @media screen and (min-width: getBreakPoint(tablet)) {
+                    display: block;
+                }
+            }
+
+            &__link {
+                color: get_var(text__second);
+                font-size: 18px;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .logo {
+        font-size: 24px;
+        color: get-var(main__first);
+    }
+
+    .block-authenticated {
+        display: none;
+
+        @media screen and (min-width: getBreakPoint("tablet")) {
+            display: flex;
+        }
+
+        .block-authenticated-list {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 18px;
+            font-weight: 400;
+            color: get_var(text__second);
+
+            &__button {
+                color: get-var(text__first);
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            &__link {
+                color: get_var(text__second);
+            }
+        }
+    }
+
+    .burger-open {
+        width: 40px;
+        // height: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .burger-open-span {
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background-color: get-var(main__first);
+        }
+
+        .burger-open-span::before {
+            content: '';
+            display: block;
+            margin-top: -7px;
+            background-color: get-var(main__first);
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+        }
+
+        .burger-open-span::after {
+            content: '';
+            display: block;
+            margin-top: 10px;
+            background-color: get-var(main__first);
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+        }
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            display: none;
+        }
+    }
+}

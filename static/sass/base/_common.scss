@@ -1,3 +1,10 @@
 html {
     scroll-behavior: smooth;
 }
+
+body {
+    background-color: get-var(main__first);
+    font-family: $family;
+    color: get-var(main__first);
+    font-weight: 500;
+}

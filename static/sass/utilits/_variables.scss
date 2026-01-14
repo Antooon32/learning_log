@@ -1,21 +1,59 @@
-@use "sass:string";
+// @use "sass:string"; не працює
 
+$family: "Inter";
 
+$main: (
+    first: #cfe9f2,
+    second: rgba(22, 99, 111, 0.5),
+    third: #658288,
+);
 
-// @function get-var($variable-name) {
-//   $parts: string.split($variable-name, '__');
-//   $prefix: nth($parts, 1);
-//   $key: nth($parts, 2);
+$text: (
+    first: rgba(255, 0, 0, 0.7),
+    second: rgba(207, 233, 242, 0.7),
+);
 
-//   @if not map-has-key($var-maps, $prefix) {
-//     @error "Невідомий префікс '#{$prefix}' для змінної '#{$variable-name}'. Допустимі префікси: #{map-keys($var-maps)}.";
-//   }
+$hover: (
+    first: rgba(101, 130, 136, 0.8),
+    second: rgba(101, 130, 136, 0.6),
+    third: rgba(207, 233, 242, 0.5),
+);
 
-//   $target-map: map-get($var-maps, $prefix);
+$var-maps: (
+  "main": $main,
+  "text": $text,
+  "hover": $hover,
+);
 
-//   @if not map-has-key($target-map, $key) {
-//     @error "Ключ '#{$key}' не знайдено в мапі '#{$prefix}'.";
-//   }
+@function str-split($string, $separator) {
+  $split-list: ();
+  $index: str-index($string, $separator);
+  
+  @while $index != null {
+    $item: str-slice($string, 1, $index - 1);
+    $split-list: append($split-list, $item);
+    $string: str-slice($string, $index + str-length($separator));
+    $index: str-index($string, $separator);
+  }
+  
+  $split-list: append($split-list, $string);
+  @return $split-list;
+}
 
-//   @return map-get($target-map, $key);
-// }
+@function get-var($variable-name) {
+  $parts: str-split($variable-name, '__');
+  $prefix: nth($parts, 1);
+  $key: nth($parts, 2);
+
+  @if not map-has-key($var-maps, $prefix) {
+    @error "Невідомий префікс '#{$prefix}' для змінної '#{$variable-name}'. Допустимі префікси: #{map-keys($var-maps)}.";
+  }
+
+  $target-map: map-get($var-maps, $prefix);
+
+  @if not map-has-key($target-map, $key) {
+    @error "Ключ '#{$key}' не знайдено в мапі '#{$prefix}'.";
+  }
+
+  @return map-get($target-map, $key);
+}
