@@ -1,3 +1,140 @@
-.hero {
-    background-color: get-var(main__third);
+.main-container {
+    background-color: get-var(main__second);
+    border-radius: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 23px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        padding: 10px 22px;
+        margin-bottom: 44px;
+    }
+
+    @media screen and (min-width: getBreakPoint(desktop)) {
+        padding: 35px 30px;
+        margin-bottom: 70px;
+    }
+
+    &__title {
+        font-size: 32px;
+        margin-bottom: 19px;
+        font-weight: 500;
+        text-align: center;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            font-size: 64px;
+            margin-bottom: 22px;
+            text-align: start;
+        }
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            font-size: 82px;
+            margin-bottom: 36px;
+        }
+    }
+
+    &__description {
+        font-size: 16px;
+        color: get-var(text__second);
+        margin-bottom: 58px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            font-size: 24px;
+            margin-bottom: 33px;
+        }
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            font-size: 28px;
+            margin-bottom: 46px;
+        }
+    }
+
+    &__button {
+        @include button(100%, 62px);
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            @include button(300px, 62px);
+            margin-bottom: 17px;
+        }
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.second-container {
+    margin-bottom: 50px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        display: grid;
+        gap: 17px;
+        grid-template-areas:
+            "a b"
+            "a b"
+            "c c";
+        grid-template-columns: auto;
+        grid-template-rows: auto;
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            grid-template-areas:
+            "a b b"
+            "a c c";
+            row-gap: 30px;
+            column-gap: 35px;
+        }
+    }
+
+    .a {
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            grid-area: a;
+            width: 355px;
+        }
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            width: 375px;
+        }
+    }
+
+    .b {
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            grid-area: b;
+            width: 355px;
+        }
+        
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            width: 750px;
+            height: 360px;
+        }
+    }
+
+    .c {
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            grid-area: c;
+            width: 100%;
+            height: 355px;
+        }
+
+        @media screen and (min-width: getBreakPoint(desktop)) {
+            width: 750px;
+            height: 360px;
+        }
+    }
+
+    &__block {
+        height: 750px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin-bottom: 0;
+        }
+    }
+
+    .recent {
+        &__title {
+            font-size: 32px;
+            margin-bottom: 24px;
+            font-weight: 500;
+            text-align: center;
+        }
+    }
 }
