@@ -20,16 +20,15 @@ def index(request):
 def topics(request):
     """Відображає всі теми або результати пошуку."""
     query = request.GET.get('q')
+
+    topics_query = Topic.objects.filter(owner=request.user).prefetch_related('entry_set').order_by('date_added')
     
     if query:
         # Фільтруємо теми користувача
-        topics = Topic.objects.filter(
-            owner=request.user, 
-            text__icontains=query
-        ).order_by('date_added')
+        topics = topics_query.filter(text__icontains=query)
     else:
         # Якщо пошука немає показуємо всі теми користувача
-        topics = Topic.objects.filter(owner=request.user).order_by('date_added')
+        topics = topics_query
     
     context = {'topics': topics, 'search_query': query}
     return render(request, 'learning_logs/topics.html', context)

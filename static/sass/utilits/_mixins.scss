@@ -32,6 +32,6 @@ transition: $transitions;
     @include multi-transition((background-color));
 
     &:hover {
-        background-color: get-var(hover__second);;
+        background-color: get-var(hover__second);
     }
 }

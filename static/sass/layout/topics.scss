@@ -1,0 +1,184 @@
+.page-header {
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__title {
+        color: get-var(main__third);
+        font-weight: 400;
+        font-size: 48px;
+        text-align: center;
+        margin-bottom: 60px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin-bottom: 0px;
+        }
+    }
+
+    .form {
+        &__group {
+            border: 1px solid get-var(main__third);
+            border-radius: 15px;
+            width: 100%;
+            height: 58px;
+            background-color: #fff;
+            padding-left: 13px;
+            display: flex;
+
+
+            @media screen and (min-width: getBreakPoint(desktop)) {
+                width: 500px;
+                justify-content: space-between;
+            }
+        }
+
+        &__control {
+            margin: 17px 0px;
+            width: 183px;
+
+            &::-webkit-search-decoration,
+            &::-webkit-search-cancel-button,
+            &::-webkit-search-results-button,
+            &::-webkit-search-results-decoration {
+                display: none;
+                -webkit-appearance: none;
+            }
+
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus,
+            &:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px white inset !important;
+            }
+        }
+
+        &__button {
+            @include button(138px, 100%);
+            color: get-var(main__first);
+            font-weight: 400;
+
+            @media screen and (min-width: getBreakPoint(desktop)) {
+                @include button(170px, 100%);
+                color: get-var(main__first);
+            }
+
+            &--clear {
+                background-color: #fff;
+                border: 3px solid get-var(hover__first);
+                color: get-var(hover__first);
+
+                &:hover {
+                    background-color: #fff;
+                    border: 3px solid get-var(hover__second);
+                    @include multi-transition((border));
+                }
+            }
+        }
+    }
+}
+
+.form__result {
+    margin-bottom: 45px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        margin-bottom: 25px;
+        margin-top: 5px;
+    }
+
+    &__text {
+        font-size: 20px;
+        color: get-var(main__third);
+
+        &--span {
+            font-weight: 700;
+        }
+    }
+}
+
+.topics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 90px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        margin-bottom: 75px;
+    }
+
+    @media screen and (min-width: getBreakPoint(desktop)) {
+        gap: 16px;
+    }
+
+    &__item {
+        border-radius: 10px;
+        width: 100%;
+        background: get-var(main__second);
+        padding: 14px 15px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &__link {
+        display: block;
+        font-size: 32px;
+        font-weight: 500;
+        color: get-var(main__first);
+        text-align: center;
+        margin-bottom: 10px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin-bottom: 0px;
+        }
+    }
+
+    .topic-preview {
+        width: 100%;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        background-color: get-var(main__first);
+        padding: 15px 5px;
+        border-radius: 10px;
+        color: get-var(main__third);
+        margin-bottom: 10px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            display: none;
+        }
+    }
+
+    &__delete-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        margin: 0 auto;
+        border: 1px solid get-var(text__first);
+        border-radius: 15px;
+        width: 160px;
+        height: 50px;
+        font-weight: 500;
+        font-size: 24px;
+        color: get-var(text__first);
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin: 0;
+        }
+    }
+}
+
+.add-button {
+    @include button(284px, 65px);
+    margin: 0 auto;
+    color: get-var(main__first);
+
+    @media screen and (min-width: getBreakPoint(desktop)) {
+        margin: 0px;
+    }
+}
