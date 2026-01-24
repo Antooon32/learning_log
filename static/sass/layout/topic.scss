@@ -1,0 +1,113 @@
+.page-header__block {
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 35px;
+        align-items: center;
+    }
+}
+
+.topic-title {
+    font-weight: 400;
+    font-size: 48px;
+    color: get-var(main__third);
+    text-align: center;
+    margin-bottom: 30px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        margin-bottom: 0px;
+    }
+}
+
+.add-new-entry-button {
+    @include button(240px, 49px);
+    font-weight: 400;
+    font-size: 24px;
+    color: get-var(main__first);
+    margin: 0 auto;
+    margin-bottom: 31px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        margin: 0;
+    }
+}
+
+.topic-card {
+    border-radius: 15px;
+    width: 100%;
+    background-color: get-var(main__second);
+    padding: 20px 18px;
+    margin-bottom: 40px;
+
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        padding: 21px;
+        padding-top: 8px;
+    }
+
+    &__date {
+        font-size: 24px;
+        text-align: center;
+        color: get-var(text__second);
+        margin-bottom: 62px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin: 0;
+        }
+    }
+
+    &__control {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    &__edit {
+        border-radius: 10px;
+        width: 74px;
+        height: 48px;
+        background-color: get-var(main__third);
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        color: get-var(main__first);
+    }
+
+    &__delete {
+        border: 2px solid get-var(text__first);
+        border-radius: 10px;
+        width: 112px;
+        height: 48px;
+        background-color: #fff;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        color: get-var(text__first);
+    }
+
+    &__header {
+        margin-bottom: 38px;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+
+    &__body {
+        width: 100%;
+        border-radius: 10px;
+        background-color: get-var(main__first);
+        padding: 12px;
+        font-size: 24px;
+        color: get-var(main__third);
+    }
+}
