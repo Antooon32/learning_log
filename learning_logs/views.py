@@ -81,7 +81,7 @@ def new_entry(request, topic_id):
         
     # Показати порожню або недійсну форму
     context = {'topic': topic, 'form': form}
-    return render(request, 'learning_logs/new_entry.html', context)
+    return render(request, 'learning_logs/entry.html', context)
 
 @login_required
 def edit_entry(request, entry_id):
@@ -89,8 +89,6 @@ def edit_entry(request, entry_id):
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
     check_topic_owner(topic, request)
-    if topic.owner != request.user:
-        raise Http404
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current entry.
@@ -103,7 +101,7 @@ def edit_entry(request, entry_id):
             return redirect('learning_logs:topic', topic_id=topic.id)
         
     context = {'entry': entry, 'topic': topic, 'form': form}
-    return render(request, 'learning_logs/edit_entry.html', context)
+    return render(request, 'learning_logs/entry.html', context)
 
 @login_required
 def delete_topic(request, topic_id):

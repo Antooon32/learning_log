@@ -110,4 +110,10 @@
         font-size: 24px;
         color: get-var(main__third);
     }
+
+    &__empty {
+        color: get-var(main__third);
+        text-align: center;
+        font-size: 24px;
+    }
 }

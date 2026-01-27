@@ -1,0 +1,23 @@
+{% extends "learning_logs/base.html" %}
+{% load static %}
+
+{% block container %}
+    <div class="block-header">
+        <a class="block-header__link" href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
+    </div>
+
+    <form action="{% if entry %}{% url 'learning_logs:edit_entry' entry.id %}{% else %}{% url 'learning_logs:new_entry' topic.id %}{% endif %}" 
+          method="post" class="entry-form">
+        
+        {% csrf_token %}
+        {{ form.text }}
+        
+        <button name="submit" class="entry-form__button">
+            {% if entry %}Save changes{% else %}Add entry{% endif %}
+        </button>
+    </form>
+{% endblock container %}
+
+{% block js_files %}
+    <script src="{% static 'js/textarea_resizer.js' %}"></script>
+{% endblock js_files %}

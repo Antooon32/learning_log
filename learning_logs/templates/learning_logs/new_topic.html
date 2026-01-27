@@ -1,12 +1,12 @@
 {% extends "learning_logs/base.html" %}
 
 {% block container %}
-    <p>Add a new topic:</p>
+    <h2 class="add__title">Add a new topic:</h2>
 
-    <form action="{% url 'learning_logs:new_topic' %}" method="post">
+    <form class="add__form" action="{% url 'learning_logs:new_topic' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button name="submit" class="btn btn-lg btn-primary">Add topic</button>
+        <button name="submit" class="add__button">Add topic</button>
     </form>
 
 {% endblock container %}
