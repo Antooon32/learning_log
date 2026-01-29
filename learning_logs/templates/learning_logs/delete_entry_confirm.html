@@ -6,20 +6,18 @@
 {% endblock page_header %}
 
 {% block container %}
-  <div class="card mb-3">
-    <div class="card-header">
-        <h5>Confirm Deletion</h5>
-    </div>
-    <div class="card-body">
-      <p>Are you sure you want to delete this entry from <strong>{{ topic.text }}</strong>?</p>
-      <blockquote class="blockquote border p-3 bg-light">
+  <div class="delete">
+    <h2 class="delete__header">Confirm Deletion</h2>
+    <div class="delete__body">
+      <h3 class="delete__title">Are you sure you want to delete this entry from <span class="delete__title--span">{{ topic.text }}</span>?</h3>
+      <blockquote class="delete__entry">
         {{ entry.text|linebreaks }}
       </blockquote>
 
-      <form action="{% url 'learning_logs:delete_entry' entry.id %}" method="post">
+      <form class="delete__form" action="{% url 'learning_logs:delete_entry' entry.id %}" method="post">
         {% csrf_token %}
-        <button name="submit" class="btn btn-danger">Confirm Delete</button>
-        <a href="{% url 'learning_logs:topic' topic.id %}" class="btn btn-secondary">Cancel</a>
+        <button class="delete__button" name="submit">Confirm Delete</button>
+        <a class="delete__link" href="{% url 'learning_logs:topic' topic.id %}">Cancel</a>
       </form>
     </div>
   </div>
