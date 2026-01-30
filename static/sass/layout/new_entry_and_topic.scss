@@ -44,6 +44,11 @@
         font-size: 28px;
         color: get-var(main__first);
         text-align: center;
+        @include multi-transition(color);
+
+        &:hover {
+            color: get-var(hover__third);
+        }
 
         @media screen and (min-width: getBreakPoint(tablet)) {
             text-align: start;

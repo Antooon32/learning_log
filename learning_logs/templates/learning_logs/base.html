@@ -1,5 +1,4 @@
 {% load static %}
-{% load bootstrap4 %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,15 +10,12 @@
     <!--! Спочатку нормалізатор -->
     <!--! завантаження modern-normalize -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css"
-      integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+        integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
-
-    <!-- {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %} -->
 
     {% load compress %} {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'sass/main.scss' %}">
@@ -29,26 +25,24 @@
 
 <body>
     <header class="header">
-        <div class="container">
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-list__item">
-                        <a class="logo" href="{% url 'learning_logs:index' %}">
-                            Learning Log
-                        </a>
-                    </li>
+    <div class="container">
+        <nav class="nav">
+            <a class="logo" href="{% url 'learning_logs:index' %}">
+                Learning Log
+            </a>
 
+            <button class="burger-toggle" type="button" id="burgerToggle" aria-label="Toggle navigation">
+                <span class="burger-icon-span"></span>
+            </button>
+
+            <div class="nav-content" id="navContent">
+                <ul class="nav-list">
                     <li class="nav-list__item">
                         <a class="nav-list__link" href="{% url 'learning_logs:topics' %}">
                             Topics
                         </a>
                     </li>
                 </ul>
-
-                <button class="burger-open" type="button" aria-controls="navbarCollapse" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="burger-open-span"></span>
-                </button>
 
                 <div class="block-authenticated">
                     <ul class="block-authenticated-list">
@@ -57,8 +51,7 @@
                             <span class="block-authenticated-list__text">Hello, {{ user.username }}.</span>
                         </li>
                         <li class="block-authenticated-list__item">
-                            <form action="{% url 'users:logout' %}" method="post"
-                                class="block-authenticated-list__form">
+                            <form action="{% url 'users:logout' %}" method="post" class="block-authenticated-list__form">
                                 {% csrf_token %}
                                 <button type="submit" class="block-authenticated-list__button">
                                     Log out
@@ -74,6 +67,7 @@
                         </li>
                         {% endif %}
                     </ul>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -88,7 +82,9 @@
         </div>
     </main>
 
-    {% block js_files %}{% endblock js_files %}
+    {% block js_files %}
+    <script src="{% static 'js/burger.js' %}"></script>
+    {% endblock js_files %}
 </body>
 
 </html>

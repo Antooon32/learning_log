@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'users',
 
     # Сторонні застосунки.
-    'bootstrap4',
     'compressor',
 
     # Уставні застосунки Django.

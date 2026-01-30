@@ -131,6 +131,11 @@
         color: get-var(main__first);
         text-align: center;
         margin-bottom: 10px;
+        @include multi-transition(color);
+
+        &:hover {
+            color: get-var(hover__third);
+        }
 
         @media screen and (min-width: getBreakPoint(tablet)) {
             margin-bottom: 0px;
@@ -166,6 +171,12 @@
         font-weight: 500;
         font-size: 24px;
         color: get-var(text__first);
+        @include multi-transition((color, border));
+
+        &:hover {
+            color: rgba(255, 0, 0, 0.5);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+        }
 
         @media screen and (min-width: getBreakPoint(tablet)) {
             margin: 0;

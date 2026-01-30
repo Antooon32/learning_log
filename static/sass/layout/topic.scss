@@ -75,6 +75,11 @@
         align-items: center;
         font-weight: 500;
         color: get-var(main__first);
+        @include multi-transition((background-color));
+
+        &:hover {
+            background-color: get-var(hover__second);
+        }
     }
 
     &__delete {
@@ -89,6 +94,12 @@
         align-items: center;
         font-weight: 500;
         color: get-var(text__first);
+        @include multi-transition((color, border));
+
+        &:hover {
+            color: rgba(255, 0, 0, 0.5);
+            border: 2px solid rgba(255, 0, 0, 0.5);
+        }
     }
 
     &__header {

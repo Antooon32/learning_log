@@ -2,11 +2,11 @@
 
 {% block container %}
 
-    <form method="post" action="{% url 'users:register' %}">
+    <form class="register__form" method="post" action="{% url 'users:register' %}">
         {% csrf_token %}
         {{ form.as_p }}
 
-        <button name="submit" class="btn btn-lg btn-primary">Register</button>
+        <button name="submit" class="register__button">Register</button>
         <input type="hidden" name="next" value="{% url 'learning_logs:index' %}"/>
     </form>
 
