@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Max
 
 # Create your views here.
 
@@ -13,8 +14,28 @@ def check_topic_owner(topic, request):
         raise Http404
 
 def index(request):
-    """Головна сторінка "Журналу спостережень"."""
-    return render(request, 'learning_logs/index.html')
+    """Головна сторінка 'Журналу спостережень'."""
+    context = {}
+    
+    if request.user.is_authenticated:
+        user_topics = Topic.objects.filter(owner=request.user)
+        context['user_has_topics'] = user_topics.exists()
+
+        active_topics = user_topics.annotate(
+            last_activity=Max('entry__date_modified')
+        ).order_by('-last_activity', '-date_added')[:3]
+
+        recent_data = []
+        for topic in active_topics:
+            last_entry = topic.entry_set.order_by('-date_modified').first()
+            recent_data.append({
+                'topic': topic,
+                'last_entry': last_entry
+            })
+            
+        context['recent_data'] = recent_data
+
+    return render(request, 'learning_logs/index.html', context)
 
 @login_required
 def topics(request):
