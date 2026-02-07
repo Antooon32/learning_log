@@ -24,49 +24,75 @@
 </head>
 
 <body>
+    <!-- Loader -->
+    <div class="loader" id="appLoader">
+        <div class="logo-wrap">
+            <div class="bigL">L</div>
+
+            <div class="letters">
+                <span class="ch">L</span>
+                <span class="ch">e</span>
+                <span class="ch">a</span>
+                <span class="ch">r</span>
+                <span class="ch">n</span>
+                <span class="ch">i</span>
+                <span class="ch">n</span>
+                <span class="ch">g</span>
+                <span class="ch">&nbsp;</span>
+                <span class="ch">L</span>
+                <span class="ch">o</span>
+                <span class="ch">g</span>
+            </div>
+
+            <div class="loading-text">
+                Loading<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+        </div>
+    </div>
     <header class="header">
-    <div class="container">
-        <nav class="nav">
-            <a class="logo" href="{% url 'learning_logs:index' %}">
-                Learning Log
-            </a>
+        <div class="container">
+            <nav class="nav">
+                <a class="logo" href="{% url 'learning_logs:index' %}">
+                    Learning Log
+                </a>
 
-            <button class="burger-toggle" type="button" id="burgerToggle" aria-label="Toggle navigation">
-                <span class="burger-icon-span"></span>
-            </button>
+                <button class="burger-toggle" type="button" id="burgerToggle" aria-label="Toggle navigation">
+                    <span class="burger-icon-span"></span>
+                </button>
 
-            <div class="nav-content" id="navContent">
-                <ul class="nav-list">
-                    <li class="nav-list__item">
-                        <a class="nav-list__link" href="{% url 'learning_logs:topics' %}">
-                            Topics
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="block-authenticated">
-                    <ul class="block-authenticated-list">
-                        {% if user.is_authenticated %}
-                        <li class="block-authenticated-list__item">
-                            <span class="block-authenticated-list__text">Hello, {{ user.username }}.</span>
+                <div class="nav-content" id="navContent">
+                    <ul class="nav-list">
+                        <li class="nav-list__item">
+                            <a class="nav-list__link" href="{% url 'learning_logs:topics' %}">
+                                Topics
+                            </a>
                         </li>
-                        <li class="block-authenticated-list__item">
-                            <form action="{% url 'users:logout' %}" method="post" class="block-authenticated-list__form">
-                                {% csrf_token %}
-                                <button type="submit" class="block-authenticated-list__button">
-                                    Log out
-                                </button>
-                            </form>
-                        </li>
-                        {% else %}
-                        <li class="block-authenticated-list__item">
-                            <a class="block-authenticated-list__link" href="{% url 'users:register' %}">Register</a>
-                        </li>
-                        <li class="block-authenticated-list__item">
-                            <a class="block-authenticated-list__link" href="{% url 'users:login' %}">Log in</a>
-                        </li>
-                        {% endif %}
                     </ul>
+
+                    <div class="block-authenticated">
+                        <ul class="block-authenticated-list">
+                            {% if user.is_authenticated %}
+                            <li class="block-authenticated-list__item">
+                                <span class="block-authenticated-list__text">Hello, {{ user.username }}.</span>
+                            </li>
+                            <li class="block-authenticated-list__item">
+                                <form action="{% url 'users:logout' %}" method="post"
+                                    class="block-authenticated-list__form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="block-authenticated-list__button">
+                                        Log out
+                                    </button>
+                                </form>
+                            </li>
+                            {% else %}
+                            <li class="block-authenticated-list__item">
+                                <a class="block-authenticated-list__link" href="{% url 'users:register' %}">Register</a>
+                            </li>
+                            <li class="block-authenticated-list__item">
+                                <a class="block-authenticated-list__link" href="{% url 'users:login' %}">Log in</a>
+                            </li>
+                            {% endif %}
+                        </ul>
                     </div>
                 </div>
             </nav>
@@ -85,6 +111,7 @@
     {% block js_files %}
     <script src="{% static 'js/burger.js' %}"></script>
     {% endblock js_files %}
+    <script src="{% static 'js/loader.js' %}"></script>
 </body>
 
 </html>

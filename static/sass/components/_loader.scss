@@ -1,0 +1,213 @@
+/* ===== Loader base ===== */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 12, 18, 0.65);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.loader--hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.logo-wrap {
+  position: relative;
+  width: 92vw;
+  max-width: 760px;
+  height: 260px;
+  display: grid;
+  place-items: center;
+  perspective: 1200px;
+}
+
+/* ===== Text letters ===== */
+
+.letters {
+  position: absolute;
+  display: flex;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ch {
+  display: inline-block;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 96px;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-shadow: 0 18px 40px rgba(0,0,0,.35);
+
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+/* ===== Phase 1: text fade out ===== */
+
+.logo-wrap.phase-text-out .ch {
+  animation: textOut 0.9s cubic-bezier(.25,.8,.25,1) forwards;
+}
+
+@keyframes textOut {
+  to {
+    opacity: 0;
+    filter: blur(12px);
+  }
+}
+
+/* ===== Big L ===== */
+
+.bigL {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  transform-style: preserve-3d;
+
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 140px;
+  color: #fff;
+  text-shadow: 0 18px 40px rgba(0,0,0,.35);
+
+  opacity: 0;
+}
+
+/* show + spin L */
+.logo-wrap.phase-L .bigL {
+  animation: showSpinL 2s cubic-bezier(.25,.8,.25,1) forwards;
+}
+
+@keyframes showSpinL {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotateY(0deg) scale(0.8);
+    filter: blur(12px);
+  }
+  30% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  70% {
+    transform: translate(-50%, -50%) rotateY(180deg) scale(1.05);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateY(360deg) scale(1);
+  }
+}
+
+/* ===== Phase 3: burst letters from L ===== */
+
+.logo-wrap.phase-burst .ch {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateX(0) translateY(0) scale(0.15);
+  animation: burstOut 1.4s cubic-bezier(.25,.8,.25,1) forwards;
+}
+
+.logo-wrap.phase-burst .ch:nth-child(odd) {
+  animation-delay: 0.05s;
+}
+.logo-wrap.phase-burst .ch:nth-child(even) {
+  animation-delay: 0.12s;
+}
+
+@keyframes burstOut {
+  0% {
+    opacity: 0;
+    filter: blur(16px);
+    transform: translateX(0) translateY(0) scale(0.15);
+  }
+  40% { opacity: 1; }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(var(--tx)) translateY(var(--ty)) scale(1);
+  }
+}
+
+/* ===== Loading text ===== */
+
+.loading-text {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,.75);
+}
+
+.dots span {
+  opacity: 0;
+  animation: dot-blink 1.2s infinite;
+}
+
+.dots span:nth-child(1){ animation-delay:0s }
+.dots span:nth-child(2){ animation-delay:.2s }
+.dots span:nth-child(3){ animation-delay:.4s }
+
+@keyframes dot-blink {
+  0%{opacity:0}
+  20%{opacity:1}
+  100%{opacity:0}
+}
+
+@media (max-width: 1279px) {
+  /* ховаємо все складне */
+  .letters{
+    display: none !important;
+  }
+
+  /* зменшуємо контейнер */
+  .logo-wrap {
+    height: 160px;
+  }
+
+  /* маленька L */
+  .bigL {
+    font-size: 72px;
+    opacity: 1;
+    animation: mobileSpin 1.6s linear infinite;
+  }
+}
+/* Loading – стартове положення */
+.loading-text {
+  position: absolute;
+  left: 50%;
+  bottom: 0px; /* ВИЩЕ */
+  transform: translateX(-50%);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,.75);
+
+  transition: bottom 0.8s cubic-bezier(.25,.8,.25,1),
+              opacity 0.4s ease;
+}
+
+/* ОСТАННЯ ФАЗА → опускаємо вниз */
+.logo-wrap.phase-burst .loading-text {
+  bottom: -80px; 
+}
+
+
+/* нескінченне плавне крутіння */
+@keyframes mobileSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
