@@ -5,7 +5,7 @@ Learning Log is a web-based journal system built with Python and Django. It allo
 * Topic Management: Create and manage learning categories.
 * Journal Entries: Add detailed logs for each topic.
 * User Authentication: Secure sign-up and login system.
-* Data Privacy: Restricted access—users can only view and edit their own data.
+* Data Privacy: Restricted access - users can only view and edit their own data.
 * Responsive UI: Styled using Sass for a modern look and feel.
 
 > [!IMPORTANT]
