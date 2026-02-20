@@ -1,4 +1,7 @@
 .register {
+    
+    
+    
     &__form {
         color: get-var(main__third);
         display: flex;
@@ -35,4 +38,170 @@
         color: get-var(main__first);
         margin: 15px auto;
     }
+}
+.register {
+
+  /* ===== FIELD WRAPPER ===== */
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+
+    &.is-valid input {
+      border: 2px solid #0f9d58;
+    }
+
+    &.is-invalid input {
+      border: 2px solid #d93025;
+    }
+  }
+
+  .field__help {
+    font-size: 14px;
+    opacity: 0.8;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .field__errors {
+    color: #d93025;
+    font-size: 14px;
+    padding-left: 18px;
+    line-height: 1.4;
+
+    &.is-hidden {
+      display: none;
+    }
+  }
+
+  .field__status {
+    font-size: 13px;
+
+    .status--ok {
+      color: #0f9d58;
+    }
+
+    .status--bad {
+      color: #d93025;
+    }
+
+    .is-hidden {
+      display: none;
+    }
+  }
+
+  /* ===== PASSWORD WRAPPER ===== */
+  .password {
+    position: relative;
+
+    &__toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  }
+
+  /* ===== REVEAL STRIP (тонка смужка з паролем) ===== */
+  .reveal {
+    margin-top: 6px;
+
+    &__bar {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      overflow: hidden;
+    }
+
+    &__text {
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+  }
+
+  /* ===== PASSWORD STRENGTH ===== */
+  .strength {
+    margin-top: 10px;
+
+    &__track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    &__fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s ease;
+
+      /* кольори сили */
+      &.weak { background: #d93025; }
+      &.medium { background: #f9ab00; }
+      &.strong { background: #0f9d58; }
+    }
+
+    &__label {
+      margin-top: 5px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+  }
+
+  /* ===== RULES LIST ===== */
+  .rules {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.04);
+
+    &__title {
+      font-size: 14px;
+      margin-bottom: 6px;
+      opacity: 0.8;
+    }
+
+    &__list {
+      font-size: 13px;
+      padding-left: 18px;
+      line-height: 1.5;
+
+      li {
+        &.is-pass { color: #0f9d58; }
+        &.is-fail { color: #d93025; }
+      }
+    }
+  }
+
+  /* ===== RESPONSIVE FIX ===== */
+  @media screen and (max-width: 480px) {
+    .field__help,
+    .field__errors {
+      font-size: 13px;
+    }
+
+    .register__form {
+      font-size: 20px;
+    }
+  }
+}
+.register {
+  &__form {
+    & input {
+      padding: 0 44px 0 15px; // справа місце під 👁
+      border: 2px solid transparent;
+      transition: 0.2s ease;
+    }
+  }
 }

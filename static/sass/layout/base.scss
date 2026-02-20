@@ -142,3 +142,13 @@
         }
     }
 }
+
+.nav-content {
+  @media screen and (max-width: getBreakPoint(tablet)) {
+    display: none;
+
+    &.is-open {
+      display: block; // або flex
+    }
+  }
+}

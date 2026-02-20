@@ -21,3 +21,4 @@ class EntryForm(forms.ModelForm):
                 'style': 'resize: none; overflow-y: hidden;',
             })
         }
+

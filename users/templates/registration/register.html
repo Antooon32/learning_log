@@ -1,13 +1,19 @@
 {% extends "learning_logs/base.html" %}
+{% load static %}
 
 {% block container %}
 
-    <form class="register__form" method="post" action="{% url 'users:register' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
+<form class="register__form" method="post" action="{% url 'users:register' %}" novalidate>
+  {% csrf_token %}
+  {{ form.as_p }}
 
-        <button name="submit" class="register__button">Register</button>
-        <input type="hidden" name="next" value="{% url 'learning_logs:index' %}"/>
-    </form>
+  <button name="submit" class="register__button" type="submit">Register</button>
+  <input type="hidden" name="next" value="{% url 'learning_logs:index' %}"/>
+</form>
 
 {% endblock container %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script defer src="{% static 'js/register.js' %}"></script>
+{% endblock scripts %}

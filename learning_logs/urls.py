@@ -23,3 +23,4 @@ urlpatterns = [
     # Видалення запису
     path('delete_entry/<int:entry_id>/', views.delete_entry, name='delete_entry'),
 ]
+
