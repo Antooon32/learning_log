@@ -6,6 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   burgerToggle.addEventListener("click", () => {
     navContent.classList.toggle("is-open");
-    burgerToggle.classList.toggle("is-open");
+    burgerToggle.classList.toggle("is-active");
   });
 });
