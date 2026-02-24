@@ -65,6 +65,7 @@
 </section>
 {% endblock page_header %}
 
-{% block scripts %}
-<script defer src="{% static 'js/recent.js' %}"></script>
-{% endblock scripts %}
+{% block js_files %}
+    {{ block.super }}
+    <script defer src="{% static 'js/recent.js' %}"></script>
+{% endblock js_files %}

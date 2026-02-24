@@ -19,5 +19,6 @@
 {% endblock container %}
 
 {% block js_files %}
+    {{ block.super }}
     <script src="{% static 'js/textarea_resizer.js' %}"></script>
 {% endblock js_files %}
