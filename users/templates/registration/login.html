@@ -1,15 +1,21 @@
 {% extends "learning_logs/base.html" %}
+{% load static %}
 
 {% block page_header %}
-    <h2 class="login__title">Log in to your account</h2>
+  <h2 class="login__title">Log in to your account</h2>
 {% endblock page_header %}
 
 {% block container %}
-    <form method="post" action="{% url 'users:login' %}" class="login__form">
-        {% csrf_token %}
-        {{ form.as_p }}
+  <form method="post" action="{% url 'users:login' %}" class="login__form">
+    {% csrf_token %}
+    {{ form.as_p }}
 
-        <button type="submit" name="submit" class="login__button">Log in</button>
-        <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
-    </form>
+    <button type="submit" name="submit" class="login__button">Log in</button>
+    <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+  </form>
 {% endblock container %}
+
+{% block js_files %}
+  {{ block.super }}
+  <script defer src="{% static 'js/login.js' %}"></script>
+{% endblock js_files %}

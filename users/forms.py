@@ -13,27 +13,21 @@ class MyRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # 1) залишаємо тільки потрібні поля (твоя логіка)
+        # Залишаємо тільки потрібні поля
         allowed_fields = ["username", "password1", "password2"]
         for field_name in list(self.fields.keys()):
             if field_name not in allowed_fields:
                 del self.fields[field_name]
 
-        # 2) правильні help_text як на твоєму скріні
-        self.fields["username"].help_text = (
-            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-        )
-        self.fields["password1"].help_text = (
-            "Your password can’t be too similar to your other personal information.<br>"
-            "Your password must contain at least 8 characters.<br>"
-            "Your password can’t be a commonly used password.<br>"
-            "Your password can’t be entirely numeric."
-        )
-        self.fields["password2"].help_text = (
-            "Enter the same password as before, for verification."
-        )
+        # ❌ Повністю прибираємо Django help_text
+        for field in self.fields.values():
+            field.help_text = ""
 
-        # 3) атрибути для красивого фронта + автозаповнення
+        # ❌ Прибираємо стандартні required повідомлення
+        for field in self.fields.values():
+            field.error_messages["required"] = ""
+
+        # Атрибути для фронта
         self.fields["username"].widget.attrs.update({
             "class": "field__input",
             "id": "id_username",
@@ -53,28 +47,46 @@ class MyRegisterForm(UserCreationForm):
             "autocomplete": "new-password",
         })
 
-    # 4) серверна перевірка username (без сюрпризів типу User та user)
+    # ===== SERVER VALIDATION =====
+
     def clean_username(self):
         username = (self.cleaned_data.get("username") or "").strip()
-        if not username:
-            raise ValidationError("This field is required.")
 
-        # Django правило символів
-        # (можна не дублювати, але корисно для чистого меседжу)
+        if not username:
+            raise ValidationError("Username is required.")
+
         import re
         if not re.match(r"^[\w.@+-]+$", username):
-            raise ValidationError("Letters, digits and @/./+/-/_ only.")
+            raise ValidationError(
+                "Use only letters, digits and @/./+/-/_."
+            )
 
         if len(username) > 150:
-            raise ValidationError("Must be 150 characters or fewer.")
+            raise ValidationError(
+                "Username must be 150 characters or fewer."
+            )
 
         if User.objects.filter(username__iexact=username).exists():
-            raise ValidationError("This username is already taken.")
+            raise ValidationError(
+                "This username is already taken."
+            )
 
         return username
 
-    # 5) серверна валідація пароля через AUTH_PASSWORD_VALIDATORS
     def clean_password1(self):
-        pw = self.cleaned_data.get("password1") or ""
-        validate_password(pw, user=None)
-        return pw
+        password = self.cleaned_data.get("password1") or ""
+        username = self.cleaned_data.get("username") or ""
+
+        if not password:
+            raise ValidationError("Password is required.")
+
+        # передаємо user для перевірки схожості
+        temp_user = User(username=username)
+
+        try:
+            validate_password(password, user=temp_user)
+        except ValidationError as e:
+            # повертаємо тільки перше повідомлення
+            raise ValidationError(e.messages[0])
+
+        return password

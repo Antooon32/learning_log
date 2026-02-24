@@ -3,17 +3,61 @@
 
 {% block container %}
 
-<form class="register__form" method="post" action="{% url 'users:register' %}" novalidate>
+<form class="register__form"
+      method="post"
+      action="{% url 'users:register' %}"
+      novalidate
+      id="registerForm"
+      data-check-username-url="{% url 'users:check_username' %}">
   {% csrf_token %}
-  {{ form.as_p }}
 
-  <button name="submit" class="register__button" type="submit">Register</button>
+  <div class="field">
+    <label class="field__label" for="id_username">Username:</label>
+    {{ form.username }}
+    <p class="field__error" id="usernameError" aria-live="polite"></p>
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="id_password1">Password:</label>
+    {{ form.password1 }}
+
+    <div class="field__typed" id="passwordTypedWrap" hidden>
+      <span class="field__typed-label">You typed:</span>
+      <span class="field__typed-value" id="passwordTypedValue"></span>
+      <button class="field__typed-toggle" type="button" id="typedToggle">Hide</button>
+    </div>
+
+    <div class="rules" id="pwRules" hidden>
+      <div class="rules__title">Password requirements:</div>
+      <ul class="rules__list">
+        <li class="rules__item" data-rule="len">At least 8 characters</li>
+        <li class="rules__item" data-rule="notNumeric">Not only numbers</li>
+        <li class="rules__item" data-rule="mix">Includes letters and numbers</li>
+        <li class="rules__item" data-rule="notSimilar">Not similar to username</li>
+      </ul>
+    </div>
+
+    <div class="strength" id="strengthWrap" hidden>
+      <div class="strength__bar"><div class="strength__fill" id="strengthFill"></div></div>
+      <div class="strength__text" id="strengthText"></div>
+    </div>
+
+    <p class="field__error" id="password1Error" aria-live="polite"></p>
+  </div>
+
+  <div class="field">
+    <label class="field__label" for="id_password2">Password confirmation:</label>
+    {{ form.password2 }}
+    <p class="field__error" id="password2Error" aria-live="polite"></p>
+  </div>
+
+  <button class="register__button" id="registerBtn" type="submit" disabled>Register</button>
   <input type="hidden" name="next" value="{% url 'learning_logs:index' %}"/>
 </form>
 
 {% endblock container %}
 
-{% block scripts %}
+{% block js_files %}
   {{ block.super }}
   <script defer src="{% static 'js/register.js' %}"></script>
-{% endblock scripts %}
+{% endblock js_files %}

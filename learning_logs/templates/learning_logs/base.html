@@ -24,6 +24,12 @@
 </head>
 
 <body>
+    <div id="page-loader" class="loader-overlay" aria-hidden="true">
+  <div class="loader" role="status" aria-label="Loading">
+    <div class="loader__spinner"></div>
+    <div class="loader__text">Loading…</div>
+  </div>
+</div>
     <header class="header">
     <div class="container">
         <nav class="nav">
@@ -84,9 +90,8 @@
 
 {% block js_files %}
   <script defer src="{% static 'js/burger.js' %}"></script>
+  <script defer src="{% static 'js/loader.js' %}"></script>
 {% endblock js_files %}
-
-{% block scripts %}{% endblock scripts %}
 </body>
 
 </html>

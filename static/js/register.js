@@ -1,261 +1,299 @@
-(() => {
-    const $ = (sel, root = document) => root.querySelector(sel);
+window.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("registerForm");
+  if (!form) return;
 
-    const form = $(".register__form");
-    if (!form) return;
+  const username = document.getElementById("id_username");
+  const pw1 = document.getElementById("id_password1");
+  const pw2 = document.getElementById("id_password2");
+  const btn = document.getElementById("registerBtn");
 
-    const username = $("#id_username");
-    const pw1 = $("#id_password1");
-    const pw2 = $("#id_password2");
+  const usernameError = document.getElementById("usernameError");
+  const pw1Error = document.getElementById("password1Error");
+  const pw2Error = document.getElementById("password2Error");
 
-    function ensureFieldUI(input, name, extraBuilder) {
-        const p = input?.closest("p");
-        if (!p) return null;
+  const typedWrap = document.getElementById("passwordTypedWrap");
+  const typedValue = document.getElementById("passwordTypedValue");
+  const typedToggle = document.getElementById("typedToggle");
 
-        if (!p.classList.contains("field")) p.classList.add("field");
+  const rulesWrap = document.getElementById("pwRules");
+  const strengthWrap = document.getElementById("strengthWrap");
+  const strengthFill = document.getElementById("strengthFill");
+  const strengthText = document.getElementById("strengthText");
 
-        let status = $(`.field__status[data-for="${name}"]`, p);
-        if (!status) {
-            status = document.createElement("div");
-            status.className = "field__status";
-            status.setAttribute("data-for", name);
-            status.setAttribute("aria-live", "polite");
-            status.innerHTML = `
-        <span class="status status--ok is-hidden" data-ok>✓ OK</span>
-        <span class="status status--bad is-hidden" data-bad>✕ Fix</span>
-      `;
-            p.appendChild(status);
-        }
+  if (!username || !pw1 || !pw2 || !btn) return;
 
-        let errors = $(`ul.field__errors[data-for="${name}"]`, p);
-        if (!errors) {
-            errors = document.createElement("ul");
-            errors.className = "field__errors is-hidden";
-            errors.setAttribute("data-for", name);
-            p.appendChild(errors);
-        }
+  const USERNAME_RE = /^[\w.@+-]+$/;
+  const checkUrl = form.dataset.checkUsernameUrl || "";
 
-        if (typeof extraBuilder === "function") extraBuilder(p);
+  const touched = { u: false, p1: false, p2: false };
+  let showTyped = true;
 
-        return { p, status, errors };
+  // async username check
+  let usernameAvailable = null; // null = unknown/loading, true = available, false = taken
+  let debounceTimer = null;
+  let abortCtrl = null;
+
+  function normalize(v) {
+    return (v || "").trim();
+  }
+
+  function fieldBox(input) {
+    return input.closest(".field");
+  }
+
+  function setState(input, errorEl, message, show) {
+    const box = fieldBox(input);
+    if (!box || !errorEl) return;
+
+    if (!show) {
+      errorEl.textContent = "";
+      box.classList.remove("is-invalid", "is-valid");
+      return;
     }
 
-    function wrapPasswordWithToggle(p) {
-        const input = $("input", p);
-        if (!input) return;
+    if (message) {
+      errorEl.textContent = message;
+      box.classList.add("is-invalid");
+      box.classList.remove("is-valid");
+    } else {
+      errorEl.textContent = "";
+      box.classList.remove("is-invalid");
+      box.classList.add("is-valid");
+    }
+  }
 
-        let wrap = $(".password", p);
-        if (!wrap) {
-            wrap = document.createElement("div");
-            wrap.className = "password";
-            input.parentNode.insertBefore(wrap, input);
-            wrap.appendChild(input);
+  // ---------- Username ----------
+  function validateUsername() {
+    const v = normalize(username.value);
 
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "password__toggle";
-            btn.textContent = "👁";
-            btn.setAttribute("aria-label", "Show password");
-            wrap.appendChild(btn);
+    if (!v) return "Username is required.";
+    if (v.length < 3) return "Username is too short (min 3 characters).";
+    if (v.length > 150) return "Username must be 150 characters or fewer.";
+    if (!USERNAME_RE.test(v)) return "Use only letters, digits and @/./+/-/_.";
+    if (touched.u && usernameAvailable === false) return "This username is already taken.";
 
-            btn.addEventListener("click", () => {
-                const isPw = input.type === "password";
-                input.type = isPw ? "text" : "password";
-                btn.setAttribute("aria-label", isPw ? "Hide password" : "Show password");
-            });
-        }
+    return "";
+  }
+
+  function scheduleUsernameCheck() {
+    if (!checkUrl) return;
+
+    // don't check if base validation fails
+    const baseMsg = (() => {
+      const v = normalize(username.value);
+      if (!v) return "Username is required.";
+      if (v.length < 3) return "Username is too short (min 3 characters).";
+      if (v.length > 150) return "Username must be 150 characters or fewer.";
+      if (!USERNAME_RE.test(v)) return "Use only letters, digits and @/./+/-/_.";
+      return "";
+    })();
+
+    if (baseMsg) {
+      usernameAvailable = null;
+      return;
     }
 
-    function passwordExtrasBuilder(p) {
-        wrapPasswordWithToggle(p);
+    clearTimeout(debounceTimer);
+    const v = normalize(username.value);
 
-        if (!$(".reveal", p)) {
-            const reveal = document.createElement("div");
-            reveal.className = "reveal";
-            reveal.innerHTML = `
-        <div class="reveal__bar">
-          <span class="reveal__text" id="pw1-reveal"></span>
-        </div>
-      `;
-            p.appendChild(reveal);
-        }
+    debounceTimer = setTimeout(() => runUsernameCheck(v), 400);
+  }
 
-        if (!$(".strength", p)) {
-            const strength = document.createElement("div");
-            strength.className = "strength";
-            strength.innerHTML = `
-        <div class="strength__track">
-          <div class="strength__fill" id="pw-strength-fill"></div>
-        </div>
-        <div class="strength__label" id="pw-strength-label">Strength: —</div>
-      `;
-            p.appendChild(strength);
-        }
+  async function runUsernameCheck(v) {
+    if (abortCtrl) abortCtrl.abort();
+    abortCtrl = new AbortController();
 
-        if (!$(".rules", p)) {
-            const rules = document.createElement("div");
-            rules.className = "rules";
-            rules.id = "pw-rules";
-            rules.innerHTML = `
-        <div class="rules__title">Password rules:</div>
-        <ul class="rules__list">
-          <li data-rule="len">At least 8 characters</li>
-          <li data-rule="upper">Has uppercase letter</li>
-          <li data-rule="lower">Has lowercase letter</li>
-          <li data-rule="digit">Has a number</li>
-          <li data-rule="special">Has a special character</li>
-          <li data-rule="notnumeric">Not entirely numeric</li>
-          <li data-rule="common">Not a common password</li>
-        </ul>
-      `;
-            p.appendChild(rules);
-        }
+    usernameAvailable = null;
+
+    const box = fieldBox(username);
+    box && box.classList.add("is-checking");
+
+    try {
+      const url = new URL(checkUrl, window.location.origin);
+      url.searchParams.set("username", v);
+
+      const res = await fetch(url.toString(), {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        signal: abortCtrl.signal,
+      });
+
+      if (!res.ok) throw new Error("Bad response");
+      const data = await res.json();
+
+      usernameAvailable = data && data.available === true;
+    } catch (e) {
+      if (e.name !== "AbortError") usernameAvailable = null;
+    } finally {
+      box && box.classList.remove("is-checking");
+      updateAll();
+    }
+  }
+
+  // ---------- Password rules UI ----------
+  function passwordRules(pw, uname) {
+    const u = normalize(uname).toLowerCase();
+    const p = pw || "";
+    return {
+      len: p.length >= 8,
+      notNumeric: p.length ? !/^\d+$/.test(p) : false,
+      mix: /[A-Za-z]/.test(p) && /\d/.test(p),
+      notSimilar: u ? !p.toLowerCase().includes(u) : true,
+    };
+  }
+
+  function renderRules(pw) {
+    if (!rulesWrap) return;
+    if (!touched.p1 || !pw) {
+      rulesWrap.hidden = true;
+      return;
     }
 
-    const uiUsername = ensureFieldUI(username, "username");
-    const uiPw1 = ensureFieldUI(pw1, "password1", passwordExtrasBuilder);
-    const uiPw2 = ensureFieldUI(pw2, "password2", (p) => wrapPasswordWithToggle(p));
+    rulesWrap.hidden = false;
 
-    const revealText = $("#pw1-reveal");
-    const strengthFill = $("#pw-strength-fill");
-    const strengthLabel = $("#pw-strength-label");
-    const rulesBox = $("#pw-rules");
-
-    const common = new Set([
-        "password", "12345678", "qwerty", "11111111", "letmein", "admin", "welcome", "iloveyou", "123456789", "00000000"
-    ]);
-
-    function setErrors(ui, messages) {
-        if (!ui) return;
-        ui.errors.innerHTML = "";
-        if (!messages || messages.length === 0) {
-            ui.errors.classList.add("is-hidden");
-            return;
-        }
-        ui.errors.classList.remove("is-hidden");
-        for (const msg of messages) {
-            const li = document.createElement("li");
-            li.textContent = msg;
-            ui.errors.appendChild(li);
-        }
-    }
-
-    function setStatus(ui, ok) {
-        if (!ui) return;
-        const okEl = $('[data-ok]', ui.status);
-        const badEl = $('[data-bad]', ui.status);
-        okEl.classList.toggle("is-hidden", !ok);
-        badEl.classList.toggle("is-hidden", ok);
-
-        ui.p.classList.toggle("is-valid", ok);
-        ui.p.classList.toggle("is-invalid", !ok);
-    }
-
-    function validateUsername() {
-        const v = (username.value || "").trim();
-        const errors = [];
-        if (!v) errors.push("This field is required.");
-        if (v.length > 150) errors.push("Must be 150 characters or fewer.");
-        if (v && !/^[\w.@+-]+$/.test(v)) errors.push("Letters, digits and @/./+/-/_ only.");
-
-        const ok = errors.length === 0;
-        setErrors(uiUsername, errors);
-        setStatus(uiUsername, ok);
-        return ok;
-    }
-
-    function passwordRules(pw) {
-        return {
-            len: pw.length >= 8,
-            upper: /[A-Z]/.test(pw),
-            lower: /[a-z]/.test(pw),
-            digit: /\d/.test(pw),
-            special: /[^A-Za-z0-9]/.test(pw),
-            notnumeric: pw.length > 0 && !/^\d+$/.test(pw),
-            common: pw.length > 0 && !common.has(pw.toLowerCase()),
-        };
-    }
-
-    function updateRulesUI(r) {
-        if (!rulesBox) return;
-        rulesBox.querySelectorAll("li[data-rule]").forEach(li => {
-            const key = li.getAttribute("data-rule");
-            const pass = !!r[key];
-            li.classList.toggle("is-pass", pass);
-            li.classList.toggle("is-fail", !pass);
-        });
-    }
-
-    function strength(r) {
-        let score = 0;
-        if (r.len) score += 2;
-        if (r.lower) score += 1;
-        if (r.upper) score += 1;
-        if (r.digit) score += 1;
-        if (r.special) score += 2;
-        if (r.notnumeric) score += 1;
-        if (r.common) score += 1;
-
-        const pct = Math.max(0, Math.min(100, Math.round((score / 9) * 100)));
-
-        let level = "weak";
-        let label = "Weak";
-        if (pct >= 35 && pct < 65) { level = "medium"; label = "Medium"; }
-        if (pct >= 65) { level = "strong"; label = pct >= 85 ? "Very strong" : "Strong"; }
-
-        return { pct, level, label };
-    }
-
-    function validatePw1() {
-        const pw = pw1.value || "";
-        if (revealText) revealText.textContent = pw;
-
-        const r = passwordRules(pw);
-        updateRulesUI(r);
-
-        const s = strength(r);
-        if (strengthFill) {
-            strengthFill.style.width = `${s.pct}%`;
-            strengthFill.classList.remove("weak", "medium", "strong");
-            strengthFill.classList.add(s.level);
-        }
-        if (strengthLabel) strengthLabel.textContent = `Strength: ${s.label}`;
-
-        const errors = [];
-        if (!pw) errors.push("This field is required.");
-        if (pw && !r.len) errors.push("Your password must contain at least 8 characters.");
-        if (pw && !r.common) errors.push("Your password can’t be a commonly used password.");
-        if (pw && !r.notnumeric) errors.push("Your password can’t be entirely numeric.");
-
-        const ok = errors.length === 0 && s.pct >= 55;
-        setErrors(uiPw1, errors);
-        setStatus(uiPw1, ok);
-        return ok;
-    }
-
-    function validatePw2() {
-        const a = pw1.value || "";
-        const b = pw2.value || "";
-        const errors = [];
-        if (!b) errors.push("This field is required.");
-        if (b && a !== b) errors.push("The two password fields didn’t match.");
-
-        const ok = errors.length === 0;
-        setErrors(uiPw2, errors);
-        setStatus(uiPw2, ok);
-        return ok;
-    }
-
-    username?.addEventListener("input", validateUsername);
-    pw1?.addEventListener("input", () => { validatePw1(); validatePw2(); });
-    pw2?.addEventListener("input", validatePw2);
-
-    form.addEventListener("submit", (e) => {
-        const ok = (validateUsername() & validatePw1() & validatePw2());
-        if (!ok) e.preventDefault();
+    const r = passwordRules(pw, username.value);
+    ["len", "notNumeric", "mix", "notSimilar"].forEach((key) => {
+      const item = rulesWrap.querySelector(`[data-rule="${key}"]`);
+      if (!item) return;
+      item.classList.toggle("is-ok", !!r[key]);
+      item.classList.toggle("is-bad", !r[key]);
     });
+  }
 
-    validateUsername();
-    validatePw1();
-    validatePw2();
-})();
+  // ---------- Strength ----------
+  function scorePassword(pw) {
+    let s = 0;
+    if (!pw) return 0;
+    if (pw.length >= 8) s++;
+    if (pw.length >= 12) s++;
+    if (/[a-z]/.test(pw)) s++;
+    if (/[A-Z]/.test(pw)) s++;
+    if (/\d/.test(pw)) s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return Math.min(s, 6);
+  }
+
+  function renderStrength(pw) {
+    if (!strengthWrap || !strengthFill || !strengthText) return;
+    if (!touched.p1 || !pw) {
+      strengthWrap.hidden = true;
+      return;
+    }
+
+    strengthWrap.hidden = false;
+
+    const score = scorePassword(pw);
+    const percent = Math.round((score / 6) * 100);
+    strengthFill.style.width = `${percent}%`;
+
+    let label = "Weak";
+    if (score >= 5) label = "Strong";
+    else if (score >= 3) label = "Medium";
+
+    strengthText.textContent = `Strength: ${label}`;
+  }
+
+  // ---------- Typed line ----------
+  function renderTyped(pw) {
+    if (!typedWrap || !typedValue) return;
+    if (!touched.p1 || !pw) {
+      typedWrap.hidden = true;
+      typedValue.textContent = "";
+      return;
+    }
+
+    typedWrap.hidden = false;
+
+    if (showTyped) {
+      typedValue.textContent = pw;
+      typedToggle && (typedToggle.textContent = "Hide");
+    } else {
+      typedValue.textContent = "••••••••";
+      typedToggle && (typedToggle.textContent = "Show");
+    }
+  }
+
+  // ---------- Password validation ----------
+  function validatePw1() {
+    const u = normalize(username.value);
+    const p = pw1.value || "";
+
+    if (!p) return "Password is required.";
+    if (p.length < 8) return "Password must be at least 8 characters.";
+    if (/^\d+$/.test(p)) return "Password can’t be entirely numeric.";
+    if (u && p.toLowerCase().includes(u.toLowerCase())) return "Password is too similar to username.";
+    if (!(/[A-Za-z]/.test(p) && /\d/.test(p))) return "Use a mix of letters and numbers.";
+
+    return "";
+  }
+
+  function validatePw2() {
+    const a = pw1.value || "";
+    const b = pw2.value || "";
+
+    if (!b) return "Password confirmation is required.";
+    if (a !== b) return "Passwords do not match.";
+
+    return "";
+  }
+
+  function updateAll() {
+    const uMsg = validateUsername();
+    const p1Msg = validatePw1();
+    const p2Msg = validatePw2();
+
+    setState(username, usernameError, uMsg, touched.u);
+    setState(pw1, pw1Error, p1Msg, touched.p1);
+    setState(pw2, pw2Error, p2Msg, touched.p2);
+
+    const pw = pw1.value || "";
+    renderTyped(pw);
+    renderRules(pw);
+    renderStrength(pw);
+
+    const waitingForCheck = !!checkUrl && touched.u && !uMsg && usernameAvailable === null;
+    btn.disabled = !!(uMsg || p1Msg || p2Msg || waitingForCheck);
+  }
+
+  // Events
+  username.addEventListener("input", () => {
+    touched.u = true;
+    usernameAvailable = null;
+    updateAll();
+    scheduleUsernameCheck();
+  });
+
+  username.addEventListener("blur", () => {
+    touched.u = true;
+    updateAll();
+    scheduleUsernameCheck();
+  });
+
+  pw1.addEventListener("input", () => {
+    touched.p1 = true;
+    if ((pw2.value || "").length > 0) touched.p2 = true;
+    updateAll();
+  });
+
+  pw2.addEventListener("input", () => {
+    touched.p2 = true;
+    updateAll();
+  });
+
+  if (typedToggle) {
+    typedToggle.addEventListener("click", () => {
+      showTyped = !showTyped;
+      renderTyped(pw1.value || "");
+    });
+  }
+
+  form.addEventListener("submit", (e) => {
+    touched.u = true;
+    touched.p1 = true;
+    touched.p2 = true;
+    updateAll();
+    if (btn.disabled) e.preventDefault();
+  });
+
+  updateAll();
+});

@@ -1,0 +1,212 @@
+.field {
+    margin-bottom: 18px;
+
+    &__label {
+        display: block;
+        margin-bottom: 8px;
+        text-align: center;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    &__input {
+        width: 100%;
+        border-radius: 10px;
+        padding: 14px 16px;
+        border: 2px solid rgba(255, 255, 255, 0.65);
+        outline: none;
+
+        &:focus {
+            border-color: rgba(111, 159, 170, 0.95);
+        }
+    }
+
+    &__error {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 1.3;
+        text-align: left;
+        color: #b00020;
+        display: none; // hidden by default
+    }
+
+    &__typed {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.55);
+
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+
+        &-label {
+            font-size: 13px;
+            opacity: 0.7;
+            white-space: nowrap;
+            color: white;
+        }
+
+        &-value {
+            flex: 1;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 13px;
+            word-break: break-all;
+            opacity: 0.9;
+            color: white;
+        }
+
+        &-toggle {
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(111, 159, 170, 0.85);
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 13px;
+        }
+    }
+
+    &.is-invalid {
+        .field__input {
+            border-color: rgba(176, 0, 32, 0.8);
+            background: rgba(176, 0, 32, 0.06);
+        }
+
+        .field__error {
+            display: block;
+        }
+    }
+
+    &.is-valid {
+        .field__input {
+            border-color: rgba(0, 110, 90, 0.55);
+            background: rgba(0, 110, 90, 0.05);
+        }
+    }
+}
+
+/* Password rules */
+.rules {
+    margin-top: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.45);
+
+    &__title {
+        font-weight: 600;
+        margin-bottom: 8px;
+        opacity: 0.75;
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 6px;
+    }
+
+    &__item {
+        padding-left: 22px;
+        position: relative;
+        font-size: 14px;
+        opacity: 0.85;
+
+        &::before {
+            content: "•";
+            position: absolute;
+            left: 10px;
+            top: 0;
+            opacity: 0.6;
+        }
+
+        &.is-ok {
+            opacity: 1;
+
+            &::before {
+                content: "✓";
+                opacity: 0.9;
+            }
+        }
+
+        &.is-bad {
+            opacity: 0.85;
+
+            &::before {
+                content: "✕";
+                opacity: 0.8;
+            }
+        }
+    }
+}
+
+/* Strength */
+.strength {
+    margin-top: 10px;
+
+    &__bar {
+        width: 100%;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.5);
+        overflow: hidden;
+    }
+
+    &__fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 999px;
+        background: rgba(111, 159, 170, 0.95);
+        transition: width 180ms ease;
+    }
+
+    &__text {
+        margin-top: 8px;
+        font-size: 13px;
+        opacity: 0.75;
+    }
+}
+
+.btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.field.is-checking .field__input {
+    opacity: 0.85;
+}
+
+.field.is-checking .field__label::after {
+    content: " (checking...)";
+    font-weight: 500;
+    opacity: 0.6;
+    font-size: 12px;
+}
+
+.register__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.field__typed {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.field__typed-toggle {
+    margin-left: auto;
+    background: #6f8f97;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+}
