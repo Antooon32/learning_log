@@ -296,3 +296,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   updateAll();
 });
+const MAX_LEN = 16;
+pw1.setAttribute("maxlength", MAX_LEN);
+pw2.setAttribute("maxlength", MAX_LEN);
+
+[pw1, pw2].forEach(input => {
+  input.addEventListener("input", () => {
+    if (input.value.length > MAX_LEN) {
+      input.value = input.value.slice(0, MAX_LEN);
+    }
+  });
+});

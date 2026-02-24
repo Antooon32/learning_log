@@ -90,3 +90,18 @@ class MyRegisterForm(UserCreationForm):
             raise ValidationError(e.messages[0])
 
         return password
+    from django import forms
+
+class MyRegisterForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["password1"].widget.attrs.update({
+            "maxlength": 16,
+        })
+
+        self.fields["password2"].widget.attrs.update({
+            "maxlength": 16,
+        })
+        
