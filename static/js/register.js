@@ -11,10 +11,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const pw1Error = document.getElementById("password1Error");
   const pw2Error = document.getElementById("password2Error");
 
-  const typedWrap = document.getElementById("passwordTypedWrap");
-  const typedValue = document.getElementById("passwordTypedValue");
-  const typedToggle = document.getElementById("typedToggle");
-
   const rulesWrap = document.getElementById("pwRules");
   const strengthWrap = document.getElementById("strengthWrap");
   const strengthFill = document.getElementById("strengthFill");
@@ -26,10 +22,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const checkUrl = form.dataset.checkUsernameUrl || "";
 
   const touched = { u: false, p1: false, p2: false };
-  let showTyped = true;
 
   // async username check
-  let usernameAvailable = null; // null = unknown/loading, true = available, false = taken
+  let usernameAvailable = null; // null=unknown/loading, true=available, false=taken
   let debounceTimer = null;
   let abortCtrl = null;
 
@@ -62,6 +57,38 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ------- Show/Hide inside input (pw1, pw2) -------
+  function attachPasswordToggle(input) {
+    if (!input) return;
+    const p = input.closest("p"); // якщо колись буде as_p
+    const field = input.closest(".field") || p || input.parentElement;
+
+    // already wrapped?
+    if (field.querySelector(".password-wrapper")) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "password-wrapper";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "password-toggle";
+    toggle.textContent = "Show";
+    wrap.appendChild(toggle);
+
+    let visible = false;
+
+    toggle.addEventListener("click", () => {
+      visible = !visible;
+      input.type = visible ? "text" : "password";
+      toggle.textContent = visible ? "Hide" : "Show";
+    });
+  }
+
+  attachPasswordToggle(pw1);
+  attachPasswordToggle(pw2);
+
   // ---------- Username ----------
   function validateUsername() {
     const v = normalize(username.value);
@@ -75,19 +102,20 @@ window.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
+  function baseUsernameMessage() {
+    const v = normalize(username.value);
+
+    if (!v) return "Username is required.";
+    if (v.length < 3) return "Username is too short (min 3 characters).";
+    if (v.length > 150) return "Username must be 150 characters or fewer.";
+    if (!USERNAME_RE.test(v)) return "Use only letters, digits and @/./+/-/_.";
+    return "";
+  }
+
   function scheduleUsernameCheck() {
     if (!checkUrl) return;
 
-    // don't check if base validation fails
-    const baseMsg = (() => {
-      const v = normalize(username.value);
-      if (!v) return "Username is required.";
-      if (v.length < 3) return "Username is too short (min 3 characters).";
-      if (v.length > 150) return "Username must be 150 characters or fewer.";
-      if (!USERNAME_RE.test(v)) return "Use only letters, digits and @/./+/-/_.";
-      return "";
-    })();
-
+    const baseMsg = baseUsernameMessage();
     if (baseMsg) {
       usernameAvailable = null;
       return;
@@ -95,7 +123,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     clearTimeout(debounceTimer);
     const v = normalize(username.value);
-
     debounceTimer = setTimeout(() => runUsernameCheck(v), 400);
   }
 
@@ -119,8 +146,8 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!res.ok) throw new Error("Bad response");
-      const data = await res.json();
 
+      const data = await res.json();
       usernameAvailable = data && data.available === true;
     } catch (e) {
       if (e.name !== "AbortError") usernameAvailable = null;
@@ -193,26 +220,6 @@ window.addEventListener("DOMContentLoaded", () => {
     strengthText.textContent = `Strength: ${label}`;
   }
 
-  // ---------- Typed line ----------
-  function renderTyped(pw) {
-    if (!typedWrap || !typedValue) return;
-    if (!touched.p1 || !pw) {
-      typedWrap.hidden = true;
-      typedValue.textContent = "";
-      return;
-    }
-
-    typedWrap.hidden = false;
-
-    if (showTyped) {
-      typedValue.textContent = pw;
-      typedToggle && (typedToggle.textContent = "Hide");
-    } else {
-      typedValue.textContent = "••••••••";
-      typedToggle && (typedToggle.textContent = "Show");
-    }
-  }
-
   // ---------- Password validation ----------
   function validatePw1() {
     const u = normalize(username.value);
@@ -247,7 +254,6 @@ window.addEventListener("DOMContentLoaded", () => {
     setState(pw2, pw2Error, p2Msg, touched.p2);
 
     const pw = pw1.value || "";
-    renderTyped(pw);
     renderRules(pw);
     renderStrength(pw);
 
@@ -279,13 +285,6 @@ window.addEventListener("DOMContentLoaded", () => {
     touched.p2 = true;
     updateAll();
   });
-
-  if (typedToggle) {
-    typedToggle.addEventListener("click", () => {
-      showTyped = !showTyped;
-      renderTyped(pw1.value || "");
-    });
-  }
 
   form.addEventListener("submit", (e) => {
     touched.u = true;

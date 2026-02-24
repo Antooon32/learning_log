@@ -2,53 +2,31 @@ window.addEventListener("DOMContentLoaded", () => {
   const pw = document.getElementById("id_password");
   if (!pw) return;
 
-  const p = pw.closest("p");
-  if (!p) return;
+  const MAX_LEN = 16;
+  pw.setAttribute("maxlength", String(MAX_LEN));
 
-  // створюємо блок під полем
+  // wrap
   const wrap = document.createElement("div");
-  wrap.className = "field__typed";
-  wrap.hidden = true;
+  wrap.className = "password-wrapper";
+  pw.parentNode.insertBefore(wrap, pw);
+  wrap.appendChild(pw);
 
-  wrap.innerHTML = `
-    <span class="field__typed-label">You typed:</span>
-    <span class="field__typed-value"></span>
-    <button type="button" class="field__typed-toggle">Hide</button>
-  `;
+  // toggle
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "password-toggle";
+  toggle.textContent = "Show";
+  wrap.appendChild(toggle);
 
-  p.appendChild(wrap);
-
-  const valueEl = wrap.querySelector(".field__typed-value");
-  const toggle = wrap.querySelector(".field__typed-toggle");
-
-  let show = true;
-
-  function render() {
-    const v = pw.value || "";
-
-    if (!v) {
-      wrap.hidden = true;
-      valueEl.textContent = "";
-      return;
-    }
-
-    wrap.hidden = false;
-
-    if (show) {
-      valueEl.textContent = v;
-      toggle.textContent = "Hide";
-    } else {
-      valueEl.textContent = "••••••••";
-      toggle.textContent = "Show";
-    }
-  }
-
-  pw.addEventListener("input", render);
-
+  let visible = false;
   toggle.addEventListener("click", () => {
-    show = !show;
-    render();
+    visible = !visible;
+    pw.type = visible ? "text" : "password";
+    toggle.textContent = visible ? "Hide" : "Show";
   });
 
-  render();
+  // hard limit (paste safe)
+  pw.addEventListener("input", () => {
+    if (pw.value.length > MAX_LEN) pw.value = pw.value.slice(0, MAX_LEN);
+  });
 });
