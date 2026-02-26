@@ -64,5 +64,5 @@ python manage.py runserver
 - [ ] **Phase 4:** Frontend migration to React
 
 ## Contributors
-* **[Antooon32](https://github.com/Antooon32)** — Core developer.
-* **[Serhii Kharyponcuk](https://github.com/SerhiiKharyponcuk)** — Frontend enhancements (registration validation & loader).
+* **[Antooon32](https://github.com/Antooon32)** - Core developer.
+* **[Serhii Kharyponcuk](https://github.com/SerhiiKharyponcuk)** - Frontend enhancements (registration validation & loader).
