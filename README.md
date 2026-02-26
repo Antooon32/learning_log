@@ -1,5 +1,7 @@
 # Learning Log
 Learning Log is a web-based journal system built with Python and Django. It allows users to track their learning progress by categorizing entries into specific topics, ensuring a structured approach to self-education.
+> [!IMPORTANT]
+> This project originated from the base concept in **"Python Crash Course" by Eric Matthes**. While the core idea remains, it has been significantly evolved and modernized with custom features, a complete UI overhaul, and advanced Django patterns.
 ---
 ## Key Features
 * Topic Management: Create and manage learning categories.
@@ -61,3 +63,7 @@ python manage.py runserver
 - [ ] **Phase 2 (Current):** Custom Sass integration & UI Overhaul
 - [ ] **Phase 3:** API development (Django Rest Framework)
 - [ ] **Phase 4:** Frontend migration to React
+
+## Contributors
+* **[Antooon32](https://github.com/Antooon32)** — Core developer.
+* **[Serhii Kharyponcuk](https://github.com/SerhiiKharyponcuk)** — Frontend enhancements (registration validation & loader).
