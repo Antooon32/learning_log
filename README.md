@@ -9,15 +9,12 @@ Learning Log is a web-based journal system built with Python and Django. It allo
 * Data Privacy: Restricted access - users can only view and edit their own data.
 * Responsive UI: Styled using Sass for a modern look and feel.
 
-> [!IMPORTANT]
-> **Major Update in Progress:** I'm currently migrating the styling from Bootstrap to custom **Sass** and refactoring the core logic. Check the `frontend` branch for a sneak peek!
-
 ## Tech Stack
 | Layer          | Technology                                   | Status          |
 |:---------------|:---------------------------------------------|:----------------|
-| **Backend** | Python 3.10+, Django 5.2                     | Stable          |
-| **Frontend** | Django Templates, Bootstrap 4                | Current         |
-| **Styling** | Sass/SCSS                                    | **In Progress** |
+| **Backend** | Python 3.11+, Django 5.2                     | Stable          |
+| **Frontend** | Django Templates, Custom JS                | Stable         |
+| **Styling** | Sass/SCSS                                    | Stable |
 | **Database** | SQLite                                       | Development     |
 | **Future API** | Django Rest Framework                        | Planned         |
 
@@ -48,9 +45,11 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 > **Note:** Don't forget to create a `.env` file before running the migrations!
-* Apply migrations:
+* Database & Assets:
 ```bash
 python manage.py migrate
+python manage.py collectstatic
+python manage.py compress
 ```
 * Run the development server:
 ```bash
@@ -59,7 +58,7 @@ python manage.py runserver
 
 ## Project Evolution
 - [x] Base CRUD functionality (Django + Bootstrap)
-- [ ] **Phase 2 (Current):** Custom Sass integration & UI Overhaul
+- [x] **Phase 2:** Custom Sass integration & UI Overhaul
 - [ ] **Phase 3:** API development (Django Rest Framework)
 - [ ] **Phase 4:** Frontend migration to React
 
