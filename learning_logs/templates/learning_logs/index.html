@@ -1,20 +1,91 @@
 {% extends "learning_logs/base.html" %}
+{% load static %}
 
 {% block page_header %}
-    <div class="jumbotron">
-        <h1 class="display-3">Track your learning.</h1>
+<section class="hero">
+    <div class="main-container">
+        <h1 class="main-container__title">Track your learning.</h1>
 
-        <p class="lead">
+        <p class="main-container__description">
             Make your own Learning Log, and keep a list of the
             topics you're learning about. Whenever you learn something new
             about a topic, make an entry summarizing what you've learned.
         </p>
         {% if user.is_authenticated %}
-            <a class="btn btn-lg btn-primary" href="{% url 'learning_logs:topics' %}"
-                role="button">View your topics &raquo;</a>
+        <a class="main-container__button" href="{% url 'learning_logs:topics' %}" role="button">View your topics
+            &raquo;</a>
         {% else %}
-            <a class="btn btn-lg btn-primary" href="{% url 'users:register' %}"
-                role="button">Register &raquo;</a>
+        <a class="main-container__button" href="{% url 'users:register' %}" role="button">Register &raquo;</a>
         {% endif %}
     </div>
+    <div class="second-container">
+        <div class="main-container second-container__block a recent">
+            <h2 class="recent__title">Recent Activity</h2>
+
+            {% if not user.is_authenticated %}
+            <div class="recent__empty">
+                <p>Sign up to create entries and view your activity</p>
+            </div>
+
+            {% elif not user_has_topics %}
+            <div class="recent__empty">
+                <p>Create your first topic and it will appear here</p>
+            </div>
+
+            {% else %}
+            <div class="recent__list">
+                {% for item in recent_data %}
+                <div class="recent__item {% if forloop.first %}is-open{% endif %}">
+                    <div class="recent__topic-header">
+                        <a href="{% url 'learning_logs:topic' item.topic.id %}" class="recent__topic-name">
+                            {{ item.topic.text }}
+                        </a>
+                    </div>
+
+                    <div class="recent__content">
+                        {% if item.last_entry %}
+                        <small class="recent__date">{{ item.last_entry.date_modified|date:"M d, H:i" }}</small>
+                        <div class="recent__entry-preview">
+                            {{ item.last_entry.text|truncatechars:300 }}
+                        </div>
+                        {% else %}
+                        <div class="recent__entry-preview">
+                            No entries yet.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="main-container second-container__block b">
+            <h2 class="recent__title">Statistics</h2>
+            {% if not user.is_authenticated %}
+            <div class="recent__empty">
+                <p>Sign up to create entries and view your statistics</p>
+            </div>
+            {% else %}
+            <ul class="statistics-list">
+                <li class="statistics-list__item">Total Topics: <strong>{{ stats.total_topics }}</strong></li>
+                <li class="statistics-list__item">Total Entries: <strong>{{ total_entries }}</strong></li>
+                {% if stats.total_topics > 0 %}
+                <li class="statistics-list__item">First Topic created on: {{ stats.first_topic_date|date:"d.m.Y" }}</li>
+                <li class="statistics-list__item">Last Topic created on: {{ stats.last_topic_date|date:"d.m.Y" }}</li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="main-container second-container__block c">
+            <div class="recent__empty">
+                <p>There will be more content here in the future.</p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock page_header %}
+
+{% block js_files %}
+    {{ block.super }}
+    <script defer src="{% static 'js/recent.js' %}"></script>
+{% endblock js_files %}

@@ -1,0 +1,24 @@
+.container {
+    width: 100%;
+    min-width: 375px;
+    max-width: 1200px;
+    padding: 0 20px;
+    margin: 0 auto;
+    // outline: 1px solid tomato;
+    
+    //! Медіа-запити
+    @media screen and (min-width: getBreakPoint(mobile)) {
+        width: getBreakPoint(mobile);
+        // outline: 1px solid green;
+    }
+    
+    @media screen and (min-width: getBreakPoint(tablet)) {
+        width: getBreakPoint(tablet);
+        // outline: 1px solid green;
+    }
+
+    @media screen and (min-width: getBreakPoint(desktop)) {
+        width: getBreakPoint(desktop);
+        // outline: 1px solid green;
+    }
+}

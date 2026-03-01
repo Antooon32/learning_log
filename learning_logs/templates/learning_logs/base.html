@@ -1,67 +1,86 @@
 {% load static %}
-{% load bootstrap4 %}
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Learning Log</title>
+    <!--! Спочатку нормалізатор -->
+    <!--! завантаження modern-normalize -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/3.0.1/modern-normalize.min.css"
+        integrity="sha512-q6WgHqiHlKyOqslT/lgBgodhd03Wp4BEqKeW6nNtlOY4quzyG3VoQKFrieaCeSnuVseNKRGpGeDU3qPmabCANg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    {% bootstrap_css %}
-    {% bootstrap_javascript jquery='full' %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">
 
     {% load compress %} {% compress css %}
-        <link rel="stylesheet" type="text/x-scss" href="{% static 'sass/main.scss' %}">
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'sass/main.scss' %}">
     {% endcompress %}
 
 </head>
-<body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
-        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">
-            Learning Log
-        </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarCollapse" aria-controls="navbarCollapse"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'learning_logs:topics' %}">
-                        Topics
-                    </a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <span class="navbar-text">Hello, {{ user.username }}.</span>
+<body>
+    <div id="page-loader" class="loader-overlay" aria-hidden="true">
+  <div class="loader" role="status" aria-label="Loading">
+    <div class="loader__spinner"></div>
+    <div class="loader__text">Loading…</div>
+  </div>
+</div>
+    <header class="header">
+    <div class="container">
+        <nav class="nav">
+            <a class="logo" href="{% url 'learning_logs:index' %}">
+                Learning Log
+            </a>
+
+            <button class="burger-toggle" type="button" id="burgerToggle" aria-label="Toggle navigation">
+                <span class="burger-icon-span"></span>
+            </button>
+
+            <div class="nav-content" id="navContent">
+                <ul class="nav-list">
+                    <li class="nav-list__item">
+                        <a class="nav-list__link" href="{% url 'learning_logs:topics' %}">
+                            Topics
+                        </a>
                     </li>
-                    <li class="nav-item" style="display: flex; align-items: center; margin-left: 15px;">
-                        <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link" style="padding: 0; border: none; background: none;">
-                                Log out
-                            </button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:register' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
-                    </li>
-                {% endif %}
-            </ul>
+                </ul>
+
+                <div class="block-authenticated">
+                    <ul class="block-authenticated-list">
+                        {% if user.is_authenticated %}
+                        <li class="block-authenticated-list__item">
+                            <span class="block-authenticated-list__text">Hello, {{ user.username }}.</span>
+                        </li>
+                        <li class="block-authenticated-list__item">
+                            <form action="{% url 'users:logout' %}" method="post" class="block-authenticated-list__form">
+                                {% csrf_token %}
+                                <button type="submit" class="block-authenticated-list__button">
+                                    Log out
+                                </button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li class="block-authenticated-list__item">
+                            <a class="block-authenticated-list__link" href="{% url 'users:register' %}">Register</a>
+                        </li>
+                        <li class="block-authenticated-list__item">
+                            <a class="block-authenticated-list__link" href="{% url 'users:login' %}">Log in</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <main role="main" class="container">
-        <div class="pb-2 mb-2 border-bottom">
+        <div class="block_page_header">
             {% block page_header %}{% endblock page_header %}
         </div>
         <div>
@@ -69,6 +88,10 @@
         </div>
     </main>
 
-    <script src="{% static 'js/textarea_resizer.js' %}"></script>
+{% block js_files %}
+  <script defer src="{% static 'js/burger.js' %}"></script>
+  <script defer src="{% static 'js/loader.js' %}"></script>
+{% endblock js_files %}
 </body>
+
 </html>

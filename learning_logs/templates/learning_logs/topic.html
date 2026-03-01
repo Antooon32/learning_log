@@ -1,39 +1,38 @@
 {% extends 'learning_logs/base.html' %}
 
 {% block page_header %}
-    <h3>Topic: {{ topic }}</h3>
+<div class="page-header__block">
+    <h3 class="topic-title">Topic: {{ topic }}</h3>
+    <a href="{% url 'learning_logs:new_entry' topic.id %}" class="add-new-entry-button">Add
+        new entry</a>
+</div>
 {% endblock page_header %}
 
 {% block container %}
-    <div class="mb-3">
-        <a href="{% url 'learning_logs:new_entry' topic.id %}" class="btn btn-primary">Add new entry</a>
-    </div>
+{% for entry in entries %}
+<div class="topic-card">
+    <div class="topic-card__header">
+        <div class="topic-card__date">
+            {{ entry.date_added|date:'M d, Y H:i' }}
+        </div>
 
-    {% for entry in entries %}
-        <div class="card mb-3 shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <small class="text-muted">
-                    {{ entry.date_added|date:'M d, Y H:i' }}
-                </small>
-                <div>
-                    <a href="{% url 'learning_logs:edit_entry' entry.id %}" 
-                       class="btn btn-outline-secondary btn-sm mr-2">
-                        edit
-                    </a>
-                    <a href="{% url 'learning_logs:delete_entry' entry.id %}" 
-                       class="btn btn-outline-danger btn-sm">
-                        delete
-                    </a>
-                </div>
-            </div>
-            <div class="card-body">
-                {{ entry.text|linebreaks }}
-            </div>
+        <div class="topic-card__control">
+            <a href="{% url 'learning_logs:edit_entry' entry.id %}" class="topic-card__edit">
+                Edit
+            </a>
+            <a href="{% url 'learning_logs:delete_entry' entry.id %}" class="topic-card__delete">
+                Delete
+            </a>
         </div>
-    {% empty %}
-        <div class="alert alert-info">
-            There are no entries for this topic yet.
-        </div>
-    {% endfor %}
+    </div>
+    <div class="topic-card__body">
+        {{ entry.text|linebreaks }}
+    </div>
+</div>
+{% empty %}
+<div class="topic-card__empty">
+    There are no entries for this topic yet.
+</div>
+{% endfor %}
 
 {% endblock container %}

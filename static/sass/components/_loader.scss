@@ -1,0 +1,67 @@
+// ===== Learning Log Loader =====
+
+$ll-bg: #d9f0f6;
+$ll-card: #6f9faa;
+$ll-text: #eaf6fa;
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba($ll-bg, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease;
+  }
+}
+
+.loader {
+  width: 320px;
+  max-width: calc(100% - 48px);
+
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: rgba($ll-card, 0.95);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+
+  &__spinner {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 4px solid rgba($ll-text, 0.3);
+    border-top-color: rgba($ll-text, 0.95);
+    animation: ll-spin 0.9s linear infinite;
+  }
+
+  &__text {
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    color: rgba($ll-text, 0.95);
+  }
+}
+
+@keyframes ll-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader__spinner {
+    animation: none;
+  }
+}

@@ -1,0 +1,293 @@
+/* =========================
+   AUTH (Register / Login)
+   ========================= */
+
+/* Theme helpers (під твій стиль) */
+$bg-page: #cfeaf3;
+$panel: rgba(255, 255, 255, 0.55);
+$panel-border: rgba(0, 0, 0, 0.08);
+
+$accent: #6f8f97;
+$accent-hover: #5f8088;
+
+$text: rgba(0, 0, 0, 0.65);
+$text-strong: rgba(0, 0, 0, 0.75);
+$text-muted: rgba(0, 0, 0, 0.5);
+
+$danger: rgba(140, 0, 0, 0.9);
+$danger-border: rgba(140, 0, 0, 0.35);
+
+$ok-border: rgba(0, 0, 0, 0.22);
+
+/* Page titles */
+.register__title,
+.login__title {
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 2.6vw, 30px);
+  color: $text-strong;
+  margin: 18px 0 8px;
+}
+
+/* Forms layout */
+.register__form,
+.login__form {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 14px 12px 22px;
+}
+
+/* If login uses {{ form.as_p }} (p wrappers) */
+.login__form p,
+.register__form p {
+  margin: 0;
+}
+
+/* Field container */
+.field {
+  margin: 18px 0;
+}
+
+/* Labels like in your screenshots */
+.field__label {
+  display: block;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2.2vw, 28px);
+  color: $text;
+  margin-bottom: 10px;
+}
+
+/* Inputs */
+.field__input,
+.field input[type="text"],
+.field input[type="password"],
+.field input[type="email"],
+.field input[type="search"] {
+  width: 100%;
+  height: 58px;
+  border-radius: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 0 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.85);
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+}
+
+/* Focus */
+.field__input:focus,
+.field input:focus {
+  border-color: rgba(0, 0, 0, 0.18);
+  box-shadow: 0 0 0 4px rgba(111, 143, 151, 0.18);
+}
+
+/* Valid/Invalid states (we toggle class on .field) */
+.field.is-valid .field__input,
+.field.is-valid input {
+  border-color: $ok-border;
+}
+
+.field.is-invalid .field__input,
+.field.is-invalid input {
+  border-color: $danger-border;
+  box-shadow: 0 0 0 4px rgba(140, 0, 0, 0.08);
+}
+
+/* Checking state (async username check) */
+.field.is-checking .field__input,
+.field.is-checking input {
+  opacity: 0.85;
+}
+
+/* Error text */
+.field__error {
+  min-height: 18px; /* keeps layout stable */
+  margin: 10px 0 0;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: $danger;
+}
+
+/* Rules / Strength blocks for register */
+.rules,
+.strength {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid $panel-border;
+  background: $panel;
+}
+
+.rules__title {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: $text-strong;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
+.rules__list {
+  margin: 0;
+  padding-left: 18px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: $text;
+}
+
+.rules__item {
+  margin: 4px 0;
+  transition: opacity 120ms ease;
+}
+
+.rules__item.is-ok {
+  opacity: 0.95;
+}
+
+.rules__item.is-bad {
+  opacity: 0.55;
+}
+
+/* Strength bar */
+.strength__bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.strength__fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  transition: width 180ms ease;
+}
+
+.strength__text {
+  margin-top: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: $text-muted;
+}
+
+/* Buttons */
+.register__button,
+.login__button {
+  display: block;
+  margin: 26px auto 0;
+  min-width: 190px;
+  height: 56px;
+  border-radius: 14px;
+  border: none;
+  background: $accent;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+.register__button:hover,
+.login__button:hover {
+  background: $accent-hover;
+  transform: translateY(-1px);
+}
+
+.register__button:active,
+.login__button:active {
+  transform: translateY(0);
+}
+
+.register__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Password toggle inside input
+   ========================= */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 92px; /* space for toggle */
+}
+
+/* button in input */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: none;
+  background: $accent;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.95;
+  transition: opacity 120ms ease, background 120ms ease;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+  background: $accent-hover;
+}
+
+.password-toggle:active {
+  opacity: 0.92;
+}
+
+/* Keep button accessible on small screens */
+@media (max-width: 520px) {
+  .field__input,
+  .field input[type="text"],
+  .field input[type="password"] {
+    height: 54px;
+    font-size: 16px;
+  }
+
+  .password-wrapper input {
+    padding-right: 86px;
+  }
+
+  .password-toggle {
+    height: 34px;
+    right: 8px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .register__button,
+  .login__button {
+    width: 100%;
+    min-width: 0;
+    height: 54px;
+    font-size: 18px;
+  }
+}
+
+/* Optional: make django's default UL errorlist (if it appears) look nice */
+.errorlist {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: $danger;
+}

@@ -1,0 +1,80 @@
+.add {
+    &__title {
+        font-size: 40px;
+        color: get-var(main__third);
+        font-weight: 500;
+        margin-bottom: 35px;
+        text-align: center;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            text-align: start;
+        }
+    }
+
+    &__form input {
+        width: 100%;
+        border-radius: 15px;
+        height: 60px;
+        max-width: 400px;
+        margin-bottom: 60px;
+        color: get-var(main__third);
+        font-size: 24px;
+    }
+
+    &__button {
+        @include button(200px, 50px);
+        margin: 0 auto;
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            margin: 0;
+        }
+    }
+}
+
+.block-header {
+    padding: 15px;
+    background-color: get-var(main__second);
+    height: 70px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+
+    &__link {
+        display: block;
+        font-weight: 500;
+        font-size: 28px;
+        color: get-var(main__first);
+        text-align: center;
+        @include multi-transition(color);
+
+        &:hover {
+            color: get-var(hover__third);
+        }
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            text-align: start;
+        }
+    }
+}
+
+.entry-form {
+    textarea {
+        border-radius: 10px;
+        width: 100%;
+        min-height: 250px;
+        padding: 20px;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: get-var(main__second);
+    }
+
+    &__button {
+        @include button(100%, 50px);
+        padding: 0;
+        color: get-var(main__first);
+
+        @media screen and (min-width: getBreakPoint(tablet)) {
+            @include button(280px, 60px);
+            color: get-var(main__first);
+        }
+    }
+}

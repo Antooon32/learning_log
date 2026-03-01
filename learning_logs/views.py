@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Count, Min, Max
 
 # Create your views here.
 
@@ -13,23 +14,53 @@ def check_topic_owner(topic, request):
         raise Http404
 
 def index(request):
-    """Головна сторінка "Журналу спостережень"."""
-    return render(request, 'learning_logs/index.html')
+    """Головна сторінка 'Журналу спостережень'."""
+    context = {}
+    
+    if request.user.is_authenticated:
+        user_topics = Topic.objects.filter(owner=request.user)
+        context['user_has_topics'] = user_topics.exists()
+
+        stats = user_topics.aggregate(
+            total_topics=Count('id'),
+            first_topic_date=Min('date_added'),
+            last_topic_date=Max('date_added')
+        )
+
+        total_entries = Entry.objects.filter(topic__owner=request.user).count()
+
+        context['stats'] = stats
+        context['total_entries'] = total_entries
+
+        active_topics = user_topics.annotate(
+            last_activity=Max('entry__date_modified')
+        ).order_by('-last_activity', '-date_added')[:3]
+
+        recent_data = []
+        for topic in active_topics:
+            last_entry = topic.entry_set.order_by('-date_modified').first()
+            recent_data.append({
+                'topic': topic,
+                'last_entry': last_entry
+            })
+            
+        context['recent_data'] = recent_data
+
+    return render(request, 'learning_logs/index.html', context)
 
 @login_required
 def topics(request):
     """Відображає всі теми або результати пошуку."""
     query = request.GET.get('q')
+
+    topics_query = Topic.objects.filter(owner=request.user).prefetch_related('entry_set').order_by('date_added')
     
     if query:
         # Фільтруємо теми користувача
-        topics = Topic.objects.filter(
-            owner=request.user, 
-            text__icontains=query
-        ).order_by('date_added')
+        topics = topics_query.filter(text__icontains=query)
     else:
         # Якщо пошука немає показуємо всі теми користувача
-        topics = Topic.objects.filter(owner=request.user).order_by('date_added')
+        topics = topics_query
     
     context = {'topics': topics, 'search_query': query}
     return render(request, 'learning_logs/topics.html', context)
@@ -82,7 +113,7 @@ def new_entry(request, topic_id):
         
     # Показати порожню або недійсну форму
     context = {'topic': topic, 'form': form}
-    return render(request, 'learning_logs/new_entry.html', context)
+    return render(request, 'learning_logs/entry.html', context)
 
 @login_required
 def edit_entry(request, entry_id):
@@ -90,8 +121,6 @@ def edit_entry(request, entry_id):
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
     check_topic_owner(topic, request)
-    if topic.owner != request.user:
-        raise Http404
 
     if request.method != 'POST':
         # Initial request; pre-fill form with the current entry.
@@ -104,7 +133,7 @@ def edit_entry(request, entry_id):
             return redirect('learning_logs:topic', topic_id=topic.id)
         
     context = {'entry': entry, 'topic': topic, 'form': form}
-    return render(request, 'learning_logs/edit_entry.html', context)
+    return render(request, 'learning_logs/entry.html', context)
 
 @login_required
 def delete_topic(request, topic_id):

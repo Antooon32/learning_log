@@ -1,14 +1,15 @@
-"""Визначити регулярні вирази URL"""
-
 from django.urls import path, include
-
 from . import views
 
-app_name = 'users'
+app_name = "users"
 
 urlpatterns = [
-    # Додати уставні URL auth (автентифікації).
-    path('', include('django.contrib.auth.urls')),
-    # Сторінка реєстрації.
-    path('register/', views.register, name='register'),
+    # Django auth urls (login, logout, password reset etc.)
+    path("", include("django.contrib.auth.urls")),
+
+    # Register page
+    path("register/", views.register, name="register"),
+
+    # Async username check
+    path("check-username/", views.check_username, name="check_username"),
 ]

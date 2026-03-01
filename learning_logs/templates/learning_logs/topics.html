@@ -1,17 +1,18 @@
 {% extends "learning_logs/base.html" %}
 
 {% block page_header %}
-    <div class="d-flex justify-content-between align-items-center">
-        <h1>Topics</h1>
+    <div class="page-header">
+        <h1 class="page-header__title">Topics</h1>
         
-        <form action="{% url 'learning_logs:topics' %}" method="get" class="form-inline">
-            <div class="input-group">
-                <input name="q" class="form-control" type="search" 
+        <form action="{% url 'learning_logs:topics' %}" method="get" class="form">
+            <div class="form__group">
+                <input name="q" class="form__control" type="search" 
                        placeholder="Search topics..." value="{{ search_query|default:'' }}">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                <div class="form__append">
                     {% if search_query %}
-                        <a href="{% url 'learning_logs:topics' %}" class="btn btn-outline-secondary">Clear</a>
+                        <a href="{% url 'learning_logs:topics' %}" class="form__button form__button--clear">Clear</a>
+                    {% else %}
+                        <button class="form__button" type="submit">Search</button>
                     {% endif %}
                 </div>
             </div>
@@ -21,24 +22,37 @@
 
 {% block container %}
     
+    <div class="form__result">
     {% if search_query %}
-        <p class="text-muted">Results for: "<strong>{{ search_query }}</strong>"</p>
+        <p class="form__result__text">Results for: "<span class="form__result__text--span">{{ search_query }}</span>"</p>
     {% endif %}
+    </div>
 
-    <ul class="list-group border-bottom mb-3">
+    <ul class="topics-list">
         {% for topic in topics %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="topics-list__item">
                 <h3>
-                    <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
+                    <a class="topics-list__link" href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
                 </h3>
+
+                <div class="topic-preview">
+                {% with first_entry=topic.entry_set.first %}
+                    {% if first_entry %}
+                        {{ first_entry.text|truncatechars:250 }}
+                    {% else %}
+                        <span class="topic-preview__no-entries-text">Create your first entry and it will appear here</span>
+                    {% endif %}
+                {% endwith %}
+                </div>
+
                 <a href="{% url 'learning_logs:delete_topic' topic.id %}" 
-                   class="btn btn-outline-danger btn-sm">
+                   class="topics-list__delete-link">
                     Delete Topic
                 </a>
             </li>
         {% empty %}
-            <li class="list-group-item">
-                <h3>
+            <li class="topics-list__item">
+                <h3 class="topics-list__text">
                     {% if search_query %}
                         No topics match your search.
                     {% else %}
@@ -50,6 +64,6 @@
     </ul>
 
     <p>
-        <a href="{% url 'learning_logs:new_topic' %}" class="btn btn-primary">Add a new topic</a>
+        <a href="{% url 'learning_logs:new_topic' %}" class="add-button">Add a new topic</a>
     </p>
 {% endblock container %}

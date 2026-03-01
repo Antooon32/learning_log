@@ -1,19 +1,18 @@
 {% extends "learning_logs/base.html" %}
-{% load bootstrap4 %}
 
 {% block page_header %}
-  <h2>Delete Topic</h2>
+<h2>Delete Topic</h2>
 {% endblock page_header %}
 
 {% block container %}
-  <div class="alert alert-danger">
-    <h4>Are you sure you want to delete the topic: <strong>"{{ topic.text }}"</strong>?</h4>
-    <p>This action cannot be undone and all entries in this topic will be lost.</p>
-    
-    <form action="{% url 'learning_logs:delete_topic' topic.id %}" method="post">
-      {% csrf_token %}
-      {% bootstrap_button "Delete Permanently" button_type="submit" button_class="btn-danger" %}
-      <a href="{% url 'learning_logs:topics' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
+<div class="delete">
+  <h2 class="delete__title">Are you sure you want to delete the topic: <span class="delete__title--span">"{{ topic.text }}"</span>?</h2>
+  <p class="delete__description">This action cannot be undone and all entries in this topic will be lost.</p>
+
+  <form class="delete__form" action="{% url 'learning_logs:delete_topic' topic.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="delete__button delete__button--big">Delete Permanently</button>
+    <a href="{% url 'learning_logs:topics' %}" class="delete__link">Cancel</a>
+  </form>
+</div>
 {% endblock container %}

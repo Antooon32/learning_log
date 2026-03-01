@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Topic(models.Model):
     """Тема, яку вивчає користувач"""
-    text = models.CharField(max_length=60)
+    text = models.CharField(max_length=30)
     date_added = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -18,9 +18,11 @@ class Entry(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     text = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'entries'
+        ordering = ['-date_modified']
 
     def __str__(self):
         """Повертає представлення моделі у string."""
