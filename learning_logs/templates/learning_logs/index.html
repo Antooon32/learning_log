@@ -59,8 +59,28 @@
             </div>
             {% endif %}
         </div>
-        <div class="main-container second-container__block b"></div>
-        <div class="main-container second-container__block c"></div>
+        <div class="main-container second-container__block b">
+            <h2 class="recent__title">Statistics</h2>
+            {% if not user.is_authenticated %}
+            <div class="recent__empty">
+                <p>Sign up to create entries and view your statistics</p>
+            </div>
+            {% else %}
+            <ul class="statistics-list">
+                <li class="statistics-list__item">Total Topics: <strong>{{ stats.total_topics }}</strong></li>
+                <li class="statistics-list__item">Total Entries: <strong>{{ total_entries }}</strong></li>
+                {% if stats.total_topics > 0 %}
+                <li class="statistics-list__item">First Topic created on: {{ stats.first_topic_date|date:"d.m.Y" }}</li>
+                <li class="statistics-list__item">Last Topic created on: {{ stats.last_topic_date|date:"d.m.Y" }}</li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="main-container second-container__block c">
+            <div class="recent__empty">
+                <p>There will be more content here in the future.</p>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock page_header %}

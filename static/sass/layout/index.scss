@@ -97,6 +97,9 @@
     }
 
     .b {
+        display: flex;
+        flex-direction: column;
+
         @media screen and (min-width: getBreakPoint(tablet)) {
             grid-area: b;
             width: 355px;
@@ -106,9 +109,34 @@
             width: 750px;
             height: 360px;
         }
+
+        .recent__title {
+            margin-bottom: 20px;
+        }
+
+        .statistics-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+            gap: 30px;
+            padding: 20px 0;
+            font-size: 24px;
+
+            @media screen and (min-width: getBreakPoint(desktop)) {
+                text-align: start;
+                align-items: start;
+            }
+        }
     }
 
     .c {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         @media screen and (min-width: getBreakPoint(tablet)) {
             grid-area: c;
             width: 100%;

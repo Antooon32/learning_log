@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.db.models import Max
+from django.db.models import Count, Min, Max
 
 # Create your views here.
 
@@ -20,6 +20,17 @@ def index(request):
     if request.user.is_authenticated:
         user_topics = Topic.objects.filter(owner=request.user)
         context['user_has_topics'] = user_topics.exists()
+
+        stats = user_topics.aggregate(
+            total_topics=Count('id'),
+            first_topic_date=Min('date_added'),
+            last_topic_date=Max('date_added')
+        )
+
+        total_entries = Entry.objects.filter(topic__owner=request.user).count()
+
+        context['stats'] = stats
+        context['total_entries'] = total_entries
 
         active_topics = user_topics.annotate(
             last_activity=Max('entry__date_modified')
